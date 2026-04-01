@@ -25,9 +25,9 @@ interface ParticleSystemProps {
 const ParticleSystem: FC<ParticleSystemProps> = memo(
   ({
     text,
-    fontSize = 240,
+    fontSize = 120,
     fontFamily = 'Arial, sans-serif',
-    colors = ['#a0f0df', '#64d5ca', '#3baaa0', '#ff6b9d', '#c06c84'],
+    colors = ['#a0f0df', '#64d5ca', '#3baaa0'],
   }) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const particlesRef = useRef<Particle[]>([]);
@@ -75,14 +75,14 @@ const ParticleSystem: FC<ParticleSystemProps> = memo(
 
       if (textPixels.length === 0) return;
 
-      // Create FEWER particles per text pixel to reduce lag
+      // Create minimal particles per text pixel for performance
       textPixels.forEach(pixel => {
-        for (let p = 0; p < 4; p++) {
+        for (let p = 0; p < 2; p++) {
           const colorIndex = Math.floor(Math.random() * colors.length);
 
           // Spawn from left side only for flowing effect
-          const startY = pixel.y + (Math.random() - 0.5) * 150;
-          const startX = pixel.x - 300 - Math.random() * 200;
+          const startY = pixel.y + (Math.random() - 0.5) * 100;
+          const startX = pixel.x - 250 - Math.random() * 150;
 
           const particle: Particle = {
             x: startX,
@@ -91,7 +91,7 @@ const ParticleSystem: FC<ParticleSystemProps> = memo(
             vy: 0,
             baseX: pixel.x,
             baseY: pixel.y,
-            size: Math.random() * 0.8 + 0.4,
+            size: Math.random() * 0.7 + 0.3,
             life: 0,
             color: colors[colorIndex],
             forming: true,
@@ -111,8 +111,8 @@ const ParticleSystem: FC<ParticleSystemProps> = memo(
       const ctx = canvas.getContext('2d');
       if (!ctx) return;
 
-      // Clear canvas with very slight fade
-      ctx.fillStyle = 'rgba(15, 15, 15, 0.02)';
+      // Clear canvas faster for crisper display
+      ctx.fillStyle = 'rgba(15, 15, 15, 0.08)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       const particles = particlesRef.current;
@@ -120,19 +120,19 @@ const ParticleSystem: FC<ParticleSystemProps> = memo(
 
       particles.forEach(particle => {
         if (particle.forming) {
-          // Move towards base position with smooth flow
+          // Move towards base position with faster flow
           const dx = particle.baseX - particle.x;
           const dy = particle.baseY - particle.y;
           const distance = Math.sqrt(dx * dx + dy * dy);
 
           if (distance > 1) {
-            // Smooth flowing motion
-            const speed = Math.min(distance * 0.06, 6);
+            // Faster flowing motion for quicker accumulation
+            const speed = Math.min(distance * 0.12, 10);
             particle.vx = (dx / distance) * speed;
-            particle.vy = (dy / distance) * speed + (Math.random() - 0.5) * 0.3;
+            particle.vy = (dy / distance) * speed + (Math.random() - 0.5) * 0.2;
             particle.x += particle.vx;
             particle.y += particle.vy;
-            particle.life = Math.min(particle.life + 0.015, 1);
+            particle.life = Math.min(particle.life + 0.04, 1);
           } else {
             particle.forming = false;
             particle.life = 1;
