@@ -1,15 +1,19 @@
-import { FC, memo, useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
+import {FC, memo, useEffect, useState} from 'react';
 
-import { heroData, SectionId } from '../../data/data';
+import {heroData, SectionId} from '../../data/data';
 import Section from '../Layout/Section';
 import Socials from '../Socials';
 
 // Dynamically import particle system to avoid SSR issues
-const ParticleSystem = dynamic(() => import('../ParticleSystem'), { ssr: false });
+// eslint-disable-next-line react-memo/require-memo
+const ParticleSystem = dynamic(() => import('../ParticleSystem'), {ssr: false});
 
-const HeroInteractive: FC = memo(() => {
-  const { name, description, actions } = heroData;
+interface HeroInteractiveProps {}
+
+// eslint-disable-next-line react-memo/require-memo
+const HeroInteractiveComponent: FC<HeroInteractiveProps> = () => {
+  const {name, description, actions} = heroData;
   const [showContent, setShowContent] = useState(false);
 
   useEffect(() => {
@@ -23,7 +27,7 @@ const HeroInteractive: FC = memo(() => {
       <div className="relative w-full h-screen overflow-hidden bg-gradient-to-br from-[#0f0f0f] via-[#1a1a2e] to-[#0f0f0f]">
         {/* Particle Background */}
         <div className="absolute inset-0 z-0">
-          <ParticleSystem text={name} fontSize={100} density={2} interactive={true} />
+          <ParticleSystem density={2} fontSize={100} interactive={true} text={name} />
         </div>
 
         {/* Gradient overlay for depth */}
@@ -52,15 +56,15 @@ const HeroInteractive: FC = memo(() => {
 
             {/* Action buttons */}
             <div className="flex flex-wrap justify-center gap-4">
-              {actions.map(({ href, text, primary, Icon }) => (
+              {actions.map(({href, text, primary, Icon}) => (
                 <a
-                  key={text}
-                  href={href}
                   className={`inline-flex items-center gap-2 rounded-lg px-6 py-3 font-semibold transition-all duration-300 transform hover:scale-105 ${
                     primary
                       ? 'bg-gradient-to-r from-[#a0f0df] to-[#64d5ca] text-black hover:shadow-lg hover:shadow-[#a0f0df]/50'
                       : 'border-2 border-[#a0f0df]/50 text-[#a0f0df] hover:border-[#a0f0df] hover:bg-[#a0f0df]/10'
-                  }`}>
+                  }`}
+                  href={href}
+                  key={text}>
                   {text}
                   {Icon && <Icon className="h-5 w-5" />}
                 </a>
@@ -72,28 +76,21 @@ const HeroInteractive: FC = memo(() => {
         {/* Scroll indicator */}
         <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20 animate-bounce">
           <a
-            href={`/#${SectionId.About}`}
+            aria-label="Scroll to next section"
             className="flex flex-col items-center gap-2 text-[#a0f0df] hover:text-[#64d5ca] transition-colors"
-            aria-label="Scroll to next section">
+            href={`/#${SectionId.About}`}>
             <span className="text-sm font-semibold">Scroll</span>
-            <svg
-              className="w-6 h-6 animate-pulse"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M19 14l-7 7m0 0l-7-7m7 7V3"
-              />
+            <svg className="w-6 h-6 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path d="M19 14l-7 7m0 0l-7-7m7 7V3" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} />
             </svg>
           </a>
         </div>
       </div>
     </Section>
   );
-});
+};
 
-HeroInteractive.displayName = 'HeroInteractive';
+HeroInteractiveComponent.displayName = 'HeroInteractive';
+
+const HeroInteractive = memo(HeroInteractiveComponent);
 export default HeroInteractive;

@@ -1,4 +1,6 @@
-import { useEffect, useRef, useState, FC, memo } from 'react';
+import {FC, memo, useEffect, useRef, useState} from 'react';
+
+/* eslint-disable react-hooks/exhaustive-deps */
 
 interface Particle {
   x: number;
@@ -36,7 +38,7 @@ const ParticleSystem: FC<ParticleSystemProps> = memo(
   }) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const particlesRef = useRef<Particle[]>([]);
-    const mouseRef = useRef({ x: 0, y: 0 });
+    const mouseRef = useRef({x: 0, y: 0});
     const animationRef = useRef<number>();
     const [isClient, setIsClient] = useState(false);
 
@@ -85,7 +87,7 @@ const ParticleSystem: FC<ParticleSystemProps> = memo(
         if (data[i + 3] > 128) {
           // Alpha channel check
           const pixelIndex = Math.floor(i / 4);
-          const x = (pixelIndex % tempCanvas.width);
+          const x = pixelIndex % tempCanvas.width;
           const y = Math.floor(pixelIndex / tempCanvas.width);
 
           const particle: Particle = {
@@ -123,7 +125,7 @@ const ParticleSystem: FC<ParticleSystemProps> = memo(
       const mouse = mouseRef.current;
 
       // Update and draw particles
-      particles.forEach((particle) => {
+      particles.forEach(particle => {
         // Calculate distance to mouse
         const dx = mouse.x - particle.x;
         const dy = mouse.y - particle.y;
@@ -159,7 +161,7 @@ const ParticleSystem: FC<ParticleSystemProps> = memo(
 
         // Calculate life based on distance from base
         const distFromBase = Math.sqrt(
-          Math.pow(particle.x - particle.baseX, 2) + Math.pow(particle.y - particle.baseY, 2)
+          Math.pow(particle.x - particle.baseX, 2) + Math.pow(particle.y - particle.baseY, 2),
         );
         particle.life = Math.max(0.3, 1 - distFromBase / 200);
 
@@ -227,15 +229,15 @@ const ParticleSystem: FC<ParticleSystemProps> = memo(
 
     return (
       <canvas
-        ref={canvasRef}
         className="w-full h-full block"
+        ref={canvasRef}
         style={{
           display: 'block',
           background: 'linear-gradient(135deg, #0f0f0f 0%, #1a1a2e 100%)',
         }}
       />
     );
-  }
+  },
 );
 
 ParticleSystem.displayName = 'ParticleSystem';

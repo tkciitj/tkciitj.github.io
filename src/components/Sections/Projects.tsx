@@ -1,15 +1,13 @@
-import { FC, memo } from 'react';
-import { ArrowUpRightIcon } from '@heroicons/react/24/outline';
+import {ArrowUpRightIcon} from '@heroicons/react/24/outline';
 import Image from 'next/image';
-import { portfolioItems, SectionId } from '../../data/data';
+import {FC, memo} from 'react';
+
+import {portfolioItems, SectionId} from '../../data/data';
 import Section from '../Layout/Section';
 
 const Projects: FC = memo(() => {
   return (
-    <Section
-      className="text-white"
-      sectionId={SectionId.Projects}
-    >
+    <Section className="text-white" sectionId={SectionId.Projects}>
       <div className="flex flex-col gap-y-10">
         {/* Heading */}
         <h2 className="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[#a0f0df] to-[#3baaa0]">
@@ -20,19 +18,18 @@ const Projects: FC = memo(() => {
         <div className="w-full grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {portfolioItems.map((project, index) => (
             <a
-              href={project.url && project.url !== '#' ? project.url : undefined}
-              target={project.url && project.url !== '#' ? '_blank' : undefined}
-              rel={project.url && project.url !== '#' ? 'noopener noreferrer' : undefined}
-              key={`${project.title}-${index}`}
               className="group rounded-xl overflow-hidden border border-[#a0f0df]/20 bg-white/5 backdrop-blur-md shadow-md transition-all duration-300 hover:border-[#a0f0df]/50 hover:bg-white/10 hover:shadow-lg hover:-translate-y-1 cursor-pointer"
-            >
+              href={project.url && project.url !== '#' ? project.url : undefined}
+              key={`${project.title}-${index}`}
+              rel={project.url && project.url !== '#' ? 'noopener noreferrer' : undefined}
+              target={project.url && project.url !== '#' ? '_blank' : undefined}>
               {/* Project Image/Cover */}
               {project.image && (
                 <div className="relative h-40 w-full overflow-hidden bg-gradient-to-br from-[#a0f0df]/20 to-[#3baaa0]/20">
                   <Image
-                    src={project.image}
                     alt={project.title}
                     className="h-full w-full object-cover group-hover:scale-110 transition-transform duration-300"
+                    src={project.image}
                   />
                   <div className="absolute inset-0 bg-black/30 group-hover:bg-black/20 transition-all duration-300" />
                 </div>
@@ -51,15 +48,11 @@ const Projects: FC = memo(() => {
                 </div>
 
                 {/* Description */}
-                <p className="text-sm text-neutral-300 leading-relaxed line-clamp-3">
-                  {project.description}
-                </p>
+                <p className="text-sm text-neutral-300 leading-relaxed line-clamp-3">{project.description}</p>
 
                 {/* View Link */}
                 {project.url && project.url !== '#' && (
-                  <span className="text-xs font-medium text-[#a0f0df] group-hover:underline">
-                    View Project
-                  </span>
+                  <span className="text-xs font-medium text-[#a0f0df] group-hover:underline">View Project</span>
                 )}
               </div>
             </a>

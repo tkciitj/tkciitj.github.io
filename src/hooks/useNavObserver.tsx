@@ -1,4 +1,5 @@
 import {useEffect} from 'react';
+
 import {headerID} from '../components/Sections/Header';
 import {SectionId} from '../data/data';
 
@@ -8,10 +9,7 @@ import {SectionId} from '../data/data';
  * @param selectors - CSS selector string to target all sections (e.g., '[data-section]')
  * @param handler - Function to receive current visible section ID
  */
-export const useNavObserver = (
-  selectors: string,
-  handler: (section: SectionId | null) => void,
-): void => {
+export const useNavObserver = (selectors: string, handler: (section: SectionId | null) => void): void => {
   useEffect(() => {
     const sections = document.querySelectorAll<HTMLElement>(selectors);
     const headerWrapper = document.getElementById(headerID);

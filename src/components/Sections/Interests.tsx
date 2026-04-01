@@ -1,7 +1,8 @@
-import { FC, memo } from 'react';
-import { SparklesIcon } from '@heroicons/react/24/outline';
+import {SparklesIcon} from '@heroicons/react/24/outline';
+import {FC, memo} from 'react';
+
+import {SectionId} from '../../data/data';
 import Section from '../Layout/Section';
-import { SectionId } from '../../data/data';
 
 const Interests: FC = memo(() => {
   const interestList = ['Tech Exploration', 'UI/UX Design', 'Open Source', 'Clean Architecture', 'Creative Coding'];
@@ -14,9 +15,8 @@ const Interests: FC = memo(() => {
         <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
           {interestList.map((interest, index) => (
             <div
-              key={interest + index}
               className="flex items-center gap-3 rounded-xl border border-mint-500/30 bg-white/5 p-4 text-white shadow-md backdrop-blur-md"
-            >
+              key={interest + index}>
               <SparklesIcon className="h-5 w-5 text-mint-300" />
               <span className="text-sm font-medium">{interest}</span>
             </div>

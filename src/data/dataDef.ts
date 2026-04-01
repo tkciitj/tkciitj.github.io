@@ -1,7 +1,8 @@
 // src/data/dataDef.ts
-import { StaticImageData } from 'next/image';
-import { FC, ForwardRefExoticComponent, SVGProps } from 'react';
-import { IconProps } from '../components/Icon/Icon';
+import type {StaticImageData} from 'next/image';
+import type {FC, ForwardRefExoticComponent, SVGProps} from 'react';
+
+import type {IconProps} from '../components/Icon/Icon';
 
 /** Page Meta Information */
 export interface HomepageMeta {

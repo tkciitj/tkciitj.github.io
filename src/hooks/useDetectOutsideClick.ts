@@ -8,10 +8,7 @@ import {RefObject, useEffect} from 'react';
  * @param ref - The React ref pointing to a DOM element
  * @param handler - The function to execute when clicking outside
  */
-const useDetectOutsideClick = <T extends HTMLElement>(
-  ref: RefObject<T>,
-  handler: (event: Event) => void,
-): void => {
+const useDetectOutsideClick = <T extends HTMLElement>(ref: RefObject<T>, handler: (event: Event) => void): void => {
   useEffect(() => {
     if (typeof window === 'undefined') return;
 

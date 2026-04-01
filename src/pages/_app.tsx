@@ -1,9 +1,9 @@
 import 'tailwindcss/tailwind.css';
 import '../globalStyles.scss';
 
-import type { AppProps } from 'next/app';
+import type {AppProps} from 'next/app';
 import Head from 'next/head';
-import { memo } from 'react';
+import {memo} from 'react';
 
 const backgroundStyle: React.CSSProperties = {
   minHeight: '100vh',
@@ -18,21 +18,18 @@ const backgroundStyle: React.CSSProperties = {
   backgroundPosition: '0 0',
 };
 
-const MyApp = memo(({ Component, pageProps }: AppProps): JSX.Element => {
+const MyApp = memo(({Component, pageProps}: AppProps): JSX.Element => {
   return (
     <>
       <Head>
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta charSet="utf-8" />
         <title>Tushar Kant • Portfolio</title>
-        <meta
-          name="description"
-          content="Portfolio of Tushar Kant - Full Stack Developer and Problem Solver."
-        />
+        <meta content="Portfolio of Tushar Kant - Full Stack Developer and Problem Solver." name="description" />
+        <meta content="width=device-width, initial-scale=1" name="viewport" />
       </Head>
 
       {/* Full-page background wrapper */}
-      <div style={backgroundStyle} className="min-h-screen">
+      <div className="min-h-screen" style={backgroundStyle}>
         <Component {...pageProps} />
       </div>
     </>

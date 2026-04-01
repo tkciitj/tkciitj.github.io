@@ -1,11 +1,11 @@
-import { Dialog, Transition } from '@headlessui/react';
-import { Bars3BottomRightIcon } from '@heroicons/react/24/outline';
+import {Dialog, Transition} from '@headlessui/react';
+import {Bars3BottomRightIcon} from '@heroicons/react/24/outline';
 import classNames from 'classnames';
 import Link from 'next/link';
-import { FC, Fragment, memo, useCallback, useMemo, useState } from 'react';
+import {FC, Fragment, memo, useCallback, useMemo, useState} from 'react';
 
-import { SectionId } from '../../data/data';
-import { useNavObserver } from '../../hooks/useNavObserver';
+import {SectionId} from '../../data/data';
+import {useNavObserver} from '../../hooks/useNavObserver';
 
 export const headerID = 'headerNav';
 
@@ -14,14 +14,8 @@ const Header: FC = memo(() => {
 
   // ✅ Only include valid section IDs from data.ts
   const navSections = useMemo<SectionId[]>(
-    () => [
-      SectionId.About,
-      SectionId.Experience,
-      SectionId.Projects,
-      SectionId.Skills,
-      SectionId.Contact,
-    ],
-    []
+    () => [SectionId.About, SectionId.Experience, SectionId.Projects, SectionId.Skills, SectionId.Contact],
+    [],
   );
 
   const intersectionHandler = useCallback((section: SectionId | null) => {
@@ -38,8 +32,8 @@ const Header: FC = memo(() => {
   );
 });
 
-const DesktopNav: FC<{ navSections: SectionId[]; currentSection: SectionId | null }> = memo(
-  ({ navSections, currentSection }) => {
+const DesktopNav: FC<{navSections: SectionId[]; currentSection: SectionId | null}> = memo(
+  ({navSections, currentSection}) => {
     const baseClass =
       'px-4 py-2 rounded-md font-semibold first-letter:uppercase text-sm transition duration-300 focus:outline-none focus-visible:ring-2';
     const activeClass = classNames(baseClass, 'text-[#a0f0df] bg-[#a0f0df]/10 border border-[#a0f0df]/30');
@@ -62,11 +56,11 @@ const DesktopNav: FC<{ navSections: SectionId[]; currentSection: SectionId | nul
         </nav>
       </header>
     );
-  }
+  },
 );
 
-const MobileNav: FC<{ navSections: SectionId[]; currentSection: SectionId | null }> = memo(
-  ({ navSections, currentSection }) => {
+const MobileNav: FC<{navSections: SectionId[]; currentSection: SectionId | null}> = memo(
+  ({navSections, currentSection}) => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
 
     const toggleOpen = useCallback(() => {
@@ -128,7 +122,7 @@ const MobileNav: FC<{ navSections: SectionId[]; currentSection: SectionId | null
         </Transition.Root>
       </>
     );
-  }
+  },
 );
 
 const NavItem: FC<{
@@ -137,7 +131,7 @@ const NavItem: FC<{
   activeClass: string;
   inactiveClass: string;
   onClick?: () => void;
-}> = memo(({ section, current, inactiveClass, activeClass, onClick }) => {
+}> = memo(({section, current, inactiveClass, activeClass, onClick}) => {
   // Convert section id to readable label
   const label = section.charAt(0).toUpperCase() + section.slice(1);
 
