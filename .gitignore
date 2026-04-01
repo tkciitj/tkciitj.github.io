@@ -12,14 +12,18 @@
 # next.js
 /.next/
 /out/
+/dist/
 
 # production
 /build
 tsconfig.tsbuildinfo
+*.tsbuildinfo
 
 # misc
 .DS_Store
 *.pem
+.env.local
+.env.*.local
 
 # debug
 npm-debug.log*
@@ -35,3 +39,19 @@ yarn-error.log*
 
 # vercel
 .vercel
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+Thumbs.db
+
+# git
+.gitmodules
+.git/hooks/
+
+# submodules
+react-resume-template/
+node_modules/
