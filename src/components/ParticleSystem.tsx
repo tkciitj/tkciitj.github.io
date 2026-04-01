@@ -27,7 +27,7 @@ const ParticleSystem: FC<ParticleSystemProps> = memo(
     text,
     fontSize = 240,
     fontFamily = 'Arial, sans-serif',
-    colors = ['#a0f0df', '#64d5ca', '#3baaa0'],
+    colors = ['#a0f0df', '#64d5ca', '#3baaa0', '#ff6b9d', '#c06c84'],
   }) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const particlesRef = useRef<Particle[]>([]);
@@ -41,63 +41,69 @@ const ParticleSystem: FC<ParticleSystemProps> = memo(
 
       particlesRef.current = [];
 
-      ctx.font = `bold ${fontSize}px ${fontFamily}`;
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-
       canvas.width = canvas.clientWidth;
       canvas.height = canvas.clientHeight;
 
-      // Create temporary canvas to get text pixel positions
+      // Create temporary canvas to render text
       const tempCanvas = document.createElement('canvas');
       tempCanvas.width = canvas.width;
       tempCanvas.height = canvas.height;
       const tempCtx = tempCanvas.getContext('2d');
       if (!tempCtx) return;
 
-      tempCtx.font = ctx.font;
+      // Render text on temp canvas
+      tempCtx.font = `bold ${fontSize}px ${fontFamily}`;
       tempCtx.textAlign = 'center';
       tempCtx.textBaseline = 'middle';
       tempCtx.fillStyle = 'white';
       tempCtx.fillText(text, tempCanvas.width / 2, tempCanvas.height / 2);
 
+      // Get image data
       const imageData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
       const data = imageData.data;
 
-      // Create MANY particles at text positions with ultra high density
+      // Collect all text pixels
+      const textPixels: Array<{x: number; y: number}> = [];
       for (let i = 0; i < data.length; i += 4) {
-        if (data[i + 3] > 128) {
+        if (data[i + 3] > 200) {
           const pixelIndex = Math.floor(i / 4);
-          const baseX = pixelIndex % tempCanvas.width;
-          const baseY = Math.floor(pixelIndex / tempCanvas.width);
-
-          // Create multiple particles per text pixel
-          for (let p = 0; p < 3; p++) {
-            const colorIndex = Math.floor(Math.random() * colors.length);
-
-            // Spawn from random edges
-            const angle = Math.random() * Math.PI * 2;
-            const distance = Math.random() * 600 + 400;
-            const startX = canvas.width / 2 + Math.cos(angle) * distance;
-            const startY = canvas.height / 2 + Math.sin(angle) * distance;
-
-            const particle: Particle = {
-              x: startX,
-              y: startY,
-              vx: 0,
-              vy: 0,
-              baseX: baseX + (Math.random() - 0.5) * 3,
-              baseY: baseY + (Math.random() - 0.5) * 3,
-              size: Math.random() * 2.5 + 2,
-              life: 0,
-              color: colors[colorIndex],
-              forming: true,
-            };
-
-            particlesRef.current.push(particle);
-          }
+          const x = pixelIndex % tempCanvas.width;
+          const y = Math.floor(pixelIndex / tempCanvas.width);
+          textPixels.push({x, y});
         }
       }
+
+      if (textPixels.length === 0) return;
+
+      // Create massive number of particles PER text pixel
+      textPixels.forEach(pixel => {
+        for (let p = 0; p < 18; p++) {
+          const colorIndex = Math.floor(Math.random() * colors.length);
+
+          // Spawn from random edges at far distance
+          const angle = Math.random() * Math.PI * 2;
+          const distance = Math.random() * 700 + 500;
+          const startX = canvas.width / 2 + Math.cos(angle) * distance;
+          const startY = canvas.height / 2 + Math.sin(angle) * distance;
+
+          const particle: Particle = {
+            x: startX,
+            y: startY,
+            vx: 0,
+            vy: 0,
+            baseX: pixel.x,
+            baseY: pixel.y,
+            size: Math.random() * 1 + 0.5,
+            life: 0,
+            color: colors[colorIndex],
+            forming: true,
+          };
+
+          particlesRef.current.push(particle);
+        }
+      });
+
+      console.log(`Initialized ${particlesRef.current.length} particles from ${textPixels.length} text pixels`);
     };
 
     const animate = () => {
@@ -107,8 +113,8 @@ const ParticleSystem: FC<ParticleSystemProps> = memo(
       const ctx = canvas.getContext('2d');
       if (!ctx) return;
 
-      // Clear canvas with fade
-      ctx.fillStyle = 'rgba(15, 15, 15, 0.05)';
+      // Clear canvas with very slight fade
+      ctx.fillStyle = 'rgba(15, 15, 15, 0.03)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       const particles = particlesRef.current;
@@ -121,13 +127,13 @@ const ParticleSystem: FC<ParticleSystemProps> = memo(
           const dy = particle.baseY - particle.y;
           const distance = Math.sqrt(dx * dx + dy * dy);
 
-          if (distance > 3) {
-            const speed = Math.min(distance * 0.09, 10);
+          if (distance > 2) {
+            const speed = Math.min(distance * 0.08, 8);
             particle.vx = (dx / distance) * speed;
             particle.vy = (dy / distance) * speed;
             particle.x += particle.vx;
             particle.y += particle.vy;
-            particle.life = Math.min(particle.life + 0.025, 1);
+            particle.life = Math.min(particle.life + 0.02, 1);
           } else {
             particle.forming = false;
             particle.life = 1;
@@ -142,25 +148,25 @@ const ParticleSystem: FC<ParticleSystemProps> = memo(
           const mdy = particle.y - mouse.y;
           const mouseDistance = Math.sqrt(mdx * mdx + mdy * mdy);
 
-          if (mouseDistance < 180) {
+          if (mouseDistance < 200) {
             const angle = Math.atan2(mdy, mdx);
-            const force = (180 - mouseDistance) / 180;
-            particle.vx = Math.cos(angle) * force * 4;
-            particle.vy = Math.sin(angle) * force * 4;
+            const force = (200 - mouseDistance) / 200;
+            particle.vx = Math.cos(angle) * force * 5;
+            particle.vy = Math.sin(angle) * force * 5;
           } else {
             // Return to base position slowly
             const dx = particle.baseX - particle.x;
             const dy = particle.baseY - particle.y;
             const distance = Math.sqrt(dx * dx + dy * dy);
 
-            if (distance > 2) {
-              particle.vx *= 0.93;
-              particle.vy *= 0.93;
-              particle.vx += (dx / distance) * 0.025;
-              particle.vy += (dy / distance) * 0.025;
+            if (distance > 1) {
+              particle.vx *= 0.92;
+              particle.vy *= 0.92;
+              particle.vx += (dx / distance) * 0.03;
+              particle.vy += (dy / distance) * 0.03;
             } else {
-              particle.vx *= 0.96;
-              particle.vy *= 0.96;
+              particle.vx *= 0.95;
+              particle.vy *= 0.95;
             }
           }
 
@@ -168,20 +174,12 @@ const ParticleSystem: FC<ParticleSystemProps> = memo(
           particle.y += particle.vy;
         }
 
-        // Draw particle with glow
-        ctx.globalAlpha = particle.life * 0.9;
+        // Draw particle
+        ctx.globalAlpha = particle.life;
         ctx.fillStyle = particle.color;
         ctx.beginPath();
         ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
         ctx.fill();
-
-        // Add glow effect
-        ctx.globalAlpha = particle.life * 0.3;
-        ctx.strokeStyle = particle.color;
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.arc(particle.x, particle.y, particle.size + 2, 0, Math.PI * 2);
-        ctx.stroke();
       });
 
       ctx.globalAlpha = 1;
