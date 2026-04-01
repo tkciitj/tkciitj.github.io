@@ -75,16 +75,14 @@ const ParticleSystem: FC<ParticleSystemProps> = memo(
 
       if (textPixels.length === 0) return;
 
-      // Create massive number of particles PER text pixel
+      // Create FEWER particles per text pixel to reduce lag
       textPixels.forEach(pixel => {
-        for (let p = 0; p < 18; p++) {
+        for (let p = 0; p < 4; p++) {
           const colorIndex = Math.floor(Math.random() * colors.length);
 
-          // Spawn from random edges at far distance
-          const angle = Math.random() * Math.PI * 2;
-          const distance = Math.random() * 700 + 500;
-          const startX = canvas.width / 2 + Math.cos(angle) * distance;
-          const startY = canvas.height / 2 + Math.sin(angle) * distance;
+          // Spawn from left side only for flowing effect
+          const startY = pixel.y + (Math.random() - 0.5) * 150;
+          const startX = pixel.x - 300 - Math.random() * 200;
 
           const particle: Particle = {
             x: startX,
@@ -93,7 +91,7 @@ const ParticleSystem: FC<ParticleSystemProps> = memo(
             vy: 0,
             baseX: pixel.x,
             baseY: pixel.y,
-            size: Math.random() * 1 + 0.5,
+            size: Math.random() * 0.8 + 0.4,
             life: 0,
             color: colors[colorIndex],
             forming: true,
@@ -114,7 +112,7 @@ const ParticleSystem: FC<ParticleSystemProps> = memo(
       if (!ctx) return;
 
       // Clear canvas with very slight fade
-      ctx.fillStyle = 'rgba(15, 15, 15, 0.03)';
+      ctx.fillStyle = 'rgba(15, 15, 15, 0.02)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       const particles = particlesRef.current;
@@ -122,18 +120,19 @@ const ParticleSystem: FC<ParticleSystemProps> = memo(
 
       particles.forEach(particle => {
         if (particle.forming) {
-          // Move towards base position
+          // Move towards base position with smooth flow
           const dx = particle.baseX - particle.x;
           const dy = particle.baseY - particle.y;
           const distance = Math.sqrt(dx * dx + dy * dy);
 
-          if (distance > 2) {
-            const speed = Math.min(distance * 0.08, 8);
+          if (distance > 1) {
+            // Smooth flowing motion
+            const speed = Math.min(distance * 0.06, 6);
             particle.vx = (dx / distance) * speed;
-            particle.vy = (dy / distance) * speed;
+            particle.vy = (dy / distance) * speed + (Math.random() - 0.5) * 0.3;
             particle.x += particle.vx;
             particle.y += particle.vy;
-            particle.life = Math.min(particle.life + 0.02, 1);
+            particle.life = Math.min(particle.life + 0.015, 1);
           } else {
             particle.forming = false;
             particle.life = 1;
@@ -143,7 +142,7 @@ const ParticleSystem: FC<ParticleSystemProps> = memo(
             particle.vy = 0;
           }
         } else {
-          // Check mouse hover repulsion
+          // Stable particles at rest or with slight movement
           const mdx = particle.x - mouse.x;
           const mdy = particle.y - mouse.y;
           const mouseDistance = Math.sqrt(mdx * mdx + mdy * mdy);
@@ -151,23 +150,11 @@ const ParticleSystem: FC<ParticleSystemProps> = memo(
           if (mouseDistance < 200) {
             const angle = Math.atan2(mdy, mdx);
             const force = (200 - mouseDistance) / 200;
-            particle.vx = Math.cos(angle) * force * 5;
-            particle.vy = Math.sin(angle) * force * 5;
+            particle.vx = Math.cos(angle) * force * 4;
+            particle.vy = Math.sin(angle) * force * 4;
           } else {
-            // Return to base position slowly
-            const dx = particle.baseX - particle.x;
-            const dy = particle.baseY - particle.y;
-            const distance = Math.sqrt(dx * dx + dy * dy);
-
-            if (distance > 1) {
-              particle.vx *= 0.92;
-              particle.vy *= 0.92;
-              particle.vx += (dx / distance) * 0.03;
-              particle.vy += (dy / distance) * 0.03;
-            } else {
-              particle.vx *= 0.95;
-              particle.vy *= 0.95;
-            }
+            particle.vx *= 0.94;
+            particle.vy *= 0.94;
           }
 
           particle.x += particle.vx;
