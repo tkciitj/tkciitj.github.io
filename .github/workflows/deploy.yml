@@ -3,41 +3,56 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [main, master]
-  pull_request:
-    branches: [main, master]
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [18.x]
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: false
+
+      - name: Remove git submodule if exists
+        run: |
+          if [ -f .gitmodules ]; then
+            git rm --cached react-resume-template || true
+            rm -rf react-resume-template
+            rm .gitmodules
+            git add -A
+            git commit -m "Remove git submodule" || true
+          fi
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: '18'
+          cache: 'npm'
 
       - name: Install dependencies
-        run: npm install
-        # or use: yarn install
+        run: npm ci
 
-      - name: Build static site
+      - name: Check TypeScript
+        run: npm run compile
+
+      - name: Build Next.js
         run: npm run build
-        # or use: yarn build
+        env:
+          NODE_ENV: production
 
-      - name: Export static site
-        run: npx next export 2>/dev/null || echo "Note: Static export built into next build"
+      - name: Configure Pages
+        uses: actions/configure-pages@v3
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v2
+        with:
+          path: './out'
 
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./out
-          cname: # Uncomment and add domain if using custom domain
+        id: deployment
+        uses: actions/deploy-pages@v2
