@@ -23,7 +23,7 @@ const HeroInteractiveComponent: FC<HeroInteractiveProps> = () => {
       <div className="relative w-full h-screen overflow-hidden bg-gradient-to-br from-[#0f0f0f] via-[#1a1a2e] to-[#0f0f0f]">
         {mounted && (
           <div className="absolute inset-0 z-0">
-            <ParticleSystem fontSize={120} text="HI, I AM TUSHAR KANT!" />
+            <ParticleSystem fontSize={80} text="HI, I AM TUSHAR KANT!" />
           </div>
         )}
       </div>
