@@ -14,6 +14,15 @@ interface Particle {
   size: number;
   life: number;
   color: string;
+  colorIndex: number;
+  colorChangeTimer: number;
+}
+
+interface BlackHole {
+  x: number;
+  y: number;
+  radius: number;
+  active: boolean;
 }
 
 interface ParticleSystemProps {
@@ -22,7 +31,6 @@ interface ParticleSystemProps {
   fontFamily?: string;
   colors?: string[];
   density?: number;
-  mouseInfluence?: number;
   interactive?: boolean;
 }
 
@@ -31,14 +39,14 @@ const ParticleSystem: FC<ParticleSystemProps> = memo(
     text,
     fontSize = 120,
     fontFamily = 'Arial, sans-serif',
-    colors = ['#a0f0df', '#64d5ca', '#3baaa0'],
-    density = 3,
-    mouseInfluence = 150,
+    colors = ['#a0f0df', '#64d5ca', '#3baaa0', '#ff6b9d', '#c06c84', '#6c567b'],
+    density = 8,
     interactive = true,
   }) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const particlesRef = useRef<Particle[]>([]);
     const mouseRef = useRef({x: 0, y: 0});
+    const blackHoleRef = useRef<BlackHole>({x: 0, y: 0, radius: 80, active: false});
     const animationRef = useRef<number>();
     const [isClient, setIsClient] = useState(false);
 
@@ -47,25 +55,20 @@ const ParticleSystem: FC<ParticleSystemProps> = memo(
       const ctx = canvas.getContext('2d');
       if (!ctx) return;
 
-      // Clear previous particles
       particlesRef.current = [];
 
-      // Set up text rendering
       ctx.font = `bold ${fontSize}px ${fontFamily}`;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.fillStyle = '#a0f0df';
 
-      // Get text metrics
       const metrics = ctx.measureText(text);
       const textWidth = metrics.width;
       const textHeight = fontSize;
 
-      // Create image data for text
       canvas.width = Math.max(textWidth + 100, canvas.clientWidth);
       canvas.height = Math.max(textHeight + 100, canvas.clientHeight);
 
-      // Draw text off-screen to create particle positions
       const tempCanvas = document.createElement('canvas');
       tempCanvas.width = canvas.width;
       tempCanvas.height = canvas.height;
@@ -78,30 +81,30 @@ const ParticleSystem: FC<ParticleSystemProps> = memo(
       tempCtx.fillStyle = 'white';
       tempCtx.fillText(text, tempCanvas.width / 2, tempCanvas.height / 2);
 
-      // Get pixel data
       const imageData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
       const data = imageData.data;
 
-      // Create particles from text pixels
       for (let i = 0; i < data.length; i += 4 * density) {
         if (data[i + 3] > 128) {
-          // Alpha channel check
           const pixelIndex = Math.floor(i / 4);
           const x = pixelIndex % tempCanvas.width;
           const y = Math.floor(pixelIndex / tempCanvas.width);
+          const colorIndex = Math.floor(Math.random() * colors.length);
 
           const particle: Particle = {
-            x: x + (Math.random() - 0.5) * 20,
-            y: y + (Math.random() - 0.5) * 20,
-            vx: (Math.random() - 0.5) * 2,
-            vy: (Math.random() - 0.5) * 2,
+            x: x + (Math.random() - 0.5) * 10,
+            y: y + (Math.random() - 0.5) * 10,
+            vx: (Math.random() - 0.5) * 1,
+            vy: (Math.random() - 0.5) * 1,
             ax: 0,
             ay: 0,
             baseX: x,
             baseY: y,
-            size: Math.random() * 2 + 1,
+            size: Math.random() * 1 + 0.5,
             life: 1,
-            color: colors[Math.floor(Math.random() * colors.length)],
+            color: colors[colorIndex],
+            colorIndex,
+            colorChangeTimer: Math.random() * 60 + 40,
           };
 
           particlesRef.current.push(particle);
@@ -109,7 +112,6 @@ const ParticleSystem: FC<ParticleSystemProps> = memo(
       }
     };
 
-    // Animation loop
     const animate = () => {
       const canvas = canvasRef.current;
       if (!canvas) return;
@@ -117,65 +119,86 @@ const ParticleSystem: FC<ParticleSystemProps> = memo(
       const ctx = canvas.getContext('2d');
       if (!ctx) return;
 
-      // Clear canvas
-      ctx.fillStyle = 'rgba(15, 15, 15, 0.1)';
+      ctx.fillStyle = 'rgba(15, 15, 15, 0.08)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       const particles = particlesRef.current;
-      const mouse = mouseRef.current;
+      const blackHole = blackHoleRef.current;
 
-      // Update and draw particles
       particles.forEach(particle => {
-        // Calculate distance to mouse
-        const dx = mouse.x - particle.x;
-        const dy = mouse.y - particle.y;
-        const distance = Math.sqrt(dx * dx + dy * dy);
-
-        // Mouse repulsion
-        if (interactive && distance < mouseInfluence) {
-          const angle = Math.atan2(dy, dx);
-          const force = (mouseInfluence - distance) / mouseInfluence;
-          particle.ax = -Math.cos(angle) * force * 0.5;
-          particle.ay = -Math.sin(angle) * force * 0.5;
-        } else {
-          // Attraction to base position
-          const bx = particle.baseX - particle.x;
-          const by = particle.baseY - particle.y;
-          const baseDistance = Math.sqrt(bx * bx + by * by);
-
-          particle.ax = (bx / baseDistance) * 0.02;
-          particle.ay = (by / baseDistance) * 0.02;
+        particle.colorChangeTimer--;
+        if (particle.colorChangeTimer <= 0) {
+          const newColorIndex = Math.floor(Math.random() * colors.length);
+          particle.colorIndex = newColorIndex;
+          particle.color = colors[newColorIndex];
+          particle.colorChangeTimer = Math.random() * 60 + 40;
         }
 
-        // Apply friction
-        particle.vx *= 0.92;
-        particle.vy *= 0.92;
+        let attractX = particle.baseX;
+        let attractY = particle.baseY;
+        let attractionStrength = 0.02;
 
-        // Apply acceleration
+        if (blackHole.active) {
+          const dx = blackHole.x - particle.x;
+          const dy = blackHole.y - particle.y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+
+          if (distance < blackHole.radius * 3) {
+            attractX = blackHole.x;
+            attractY = blackHole.y;
+            attractionStrength = 0.15 * (1 - distance / (blackHole.radius * 3));
+          }
+        }
+
+        const bx = attractX - particle.x;
+        const by = attractY - particle.y;
+        const distance = Math.sqrt(bx * bx + by * by);
+
+        if (distance > 0.1) {
+          particle.ax = (bx / distance) * attractionStrength;
+          particle.ay = (by / distance) * attractionStrength;
+        }
+
+        particle.vx *= 0.94;
+        particle.vy *= 0.94;
+
         particle.vx += particle.ax;
         particle.vy += particle.ay;
 
-        // Update position
         particle.x += particle.vx;
         particle.y += particle.vy;
 
-        // Calculate life based on distance from base
         const distFromBase = Math.sqrt(
           Math.pow(particle.x - particle.baseX, 2) + Math.pow(particle.y - particle.baseY, 2),
         );
-        particle.life = Math.max(0.3, 1 - distFromBase / 200);
+        particle.life = Math.max(0.2, 1 - distFromBase / 250);
 
-        // Draw particle
         ctx.globalAlpha = particle.life;
         ctx.fillStyle = particle.color;
-        ctx.fillRect(particle.x, particle.y, particle.size, particle.size);
+        ctx.beginPath();
+        ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+        ctx.fill();
       });
+
+      if (blackHole.active) {
+        ctx.globalAlpha = 0.3;
+        ctx.fillStyle = '#000000';
+        ctx.beginPath();
+        ctx.arc(blackHole.x, blackHole.y, blackHole.radius, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.strokeStyle = '#a0f0df';
+        ctx.globalAlpha = 0.2;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(blackHole.x, blackHole.y, blackHole.radius + 20, 0, Math.PI * 2);
+        ctx.stroke();
+      }
 
       ctx.globalAlpha = 1;
       animationRef.current = requestAnimationFrame(animate);
     };
 
-    // Mouse move handler
     const handleMouseMove = (e: MouseEvent) => {
       if (canvasRef.current) {
         const rect = canvasRef.current.getBoundingClientRect();
@@ -186,7 +209,25 @@ const ParticleSystem: FC<ParticleSystemProps> = memo(
       }
     };
 
-    // Handle window resize
+    const handleMouseClick = (e: MouseEvent) => {
+      if (canvasRef.current && interactive) {
+        const rect = canvasRef.current.getBoundingClientRect();
+        const clickX = e.clientX - rect.left;
+        const clickY = e.clientY - rect.top;
+
+        blackHoleRef.current = {
+          x: clickX,
+          y: clickY,
+          radius: 80,
+          active: true,
+        };
+
+        setTimeout(() => {
+          blackHoleRef.current.active = false;
+        }, 3000);
+      }
+    };
+
     const handleResize = () => {
       if (canvasRef.current) {
         const canvas = canvasRef.current;
@@ -200,7 +241,6 @@ const ParticleSystem: FC<ParticleSystemProps> = memo(
       setIsClient(true);
     }, []);
 
-    // Initialize on mount
     useEffect(() => {
       const canvas = canvasRef.current;
       if (!canvas || !isClient) return;
@@ -213,6 +253,7 @@ const ParticleSystem: FC<ParticleSystemProps> = memo(
 
       if (interactive) {
         window.addEventListener('mousemove', handleMouseMove);
+        window.addEventListener('click', handleMouseClick);
       }
       window.addEventListener('resize', handleResize);
 
@@ -221,6 +262,7 @@ const ParticleSystem: FC<ParticleSystemProps> = memo(
           cancelAnimationFrame(animationRef.current);
         }
         window.removeEventListener('mousemove', handleMouseMove);
+        window.removeEventListener('click', handleMouseClick);
         window.removeEventListener('resize', handleResize);
       };
     }, [isClient, text]);
@@ -229,7 +271,7 @@ const ParticleSystem: FC<ParticleSystemProps> = memo(
 
     return (
       <canvas
-        className="w-full h-full block"
+        className="w-full h-full block cursor-pointer"
         ref={canvasRef}
         style={{
           display: 'block',
