@@ -99,10 +99,10 @@ export const aboutData: About = {
     'I am a passionate Engineering Science undergrad at IIT Jodhpur specializing in Computer Science & Electronics. With a strong foundation in full-stack development, game development, and machine learning, I transform complex problems into elegant, performant solutions. Always driven to learn new technologies and collaborate with talented teams on impactful projects.',
   aboutItems: [
     {label: 'Location', text: 'Jodhpur, India', Icon: MapIcon},
-    {label: 'Age', text: '21', Icon: CalendarIcon},
+    {label: 'Age', text: '20', Icon: CalendarIcon},
     {label: 'Nationality', text: 'Indian', Icon: FlagIcon},
-    {label: 'Interests', text: 'Game Dev, Web Dev, ML, Open Source', Icon: SparklesIcon},
-    {label: 'Study', text: 'B.Tech ESc (CSE+EE) - IIT Jodhpur', Icon: AcademicCapIcon},
+    {label: 'Interests', text: 'CyberSecurity, Game Dev, Web Dev, ML, Open Source', Icon: SparklesIcon},
+    {label: 'Study', text: 'B.Tech ES (CSE+EE) - IIT Jodhpur', Icon: AcademicCapIcon},
     {label: 'Employment', text: 'Open to Opportunities', Icon: BuildingOffice2Icon},
   ],
 };
@@ -272,22 +272,22 @@ export const education: TimelineItem[] = [
 export const experience: TimelineItem[] = [
   {
     date: 'May 2025 - July 2025',
-    location: 'HiFi1.ai (Remote)',
+    location: 'Hit11.ai (Remote)',
     title: 'Game Developer Intern',
     content: (
       <p>
-        Developed the Call-Break game for the HiFi 1 fantasy sports application. Implemented game mechanics, UI
+        Developed the Call-Break game for the Hit11.ai fantasy sports application. Implemented game mechanics, UI
         interactions, and optimized performance for smooth gameplay experience.
       </p>
     ),
   },
   {
     date: 'May 2025 - Present',
-    location: 'Career Minded Cell, IIT Jodhpur',
+    location: 'Career Development Cell, IIT Jodhpur',
     title: 'Web-Dev Team Representative',
     content: (
       <p>
-        Leading backend development initiatives for backend development for spic.iit.jcell portal. Collaborating with
+        Leading backend development initiatives for backend development for spc.iitj.ac.in portal. Collaborating with
         cross-functional teams to deliver scalable web solutions and improve user experience.
       </p>
     ),
@@ -298,7 +298,7 @@ export const experience: TimelineItem[] = [
     title: "WoC'25 Project Member",
     content: (
       <p>
-        Developed a BulkMail Scheduler for the Placement Cell as part of Winter of Code 2025. Enabled efficient bulk
+        Developed a Bulk-EMail Scheduler for the Placement Cell as part of Winter of Code 2025. Enabled efficient bulk
         email communication handling and scheduling capabilities.
       </p>
     ),
