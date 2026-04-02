@@ -17,14 +17,17 @@ interface RocketPosition {
   y: number;
   vx: number;
   vy: number;
+  angle: number;
 }
 
 const RocketGame: FC = memo(() => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const rocketImageRef = useRef<HTMLDivElement>(null);
   const [isGameActive, setIsGameActive] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
   const [canvasSize, setCanvasSize] = useState({width: 0, height: 0});
-  const rocketRef = useRef<RocketPosition>({x: 0, y: 0, vx: 0, vy: 0});
+  const [rocketPos, setRocketPos] = useState({x: 0, y: 0, angle: 0});
+  const rocketRef = useRef<RocketPosition>({x: 0, y: 0, vx: 0, vy: 0, angle: 0});
   const keysPressed = useRef<Record<string, boolean>>({});
   const particlesRef = useRef<Particle[]>([]);
   const particleIdRef = useRef(0);
@@ -34,13 +37,15 @@ const RocketGame: FC = memo(() => {
   const FRICTION = 0.95;
   const MAX_SPEED = 8;
   const BOUNDARY_MARGIN = 50;
+  const ROCKET_SIZE = 48;
+  const COLLISION_RADIUS = 30;
 
   // Initialize sizes on mount
   useEffect(() => {
     const updateSizes = () => {
       if (typeof window !== 'undefined') {
         setCanvasSize({width: window.innerWidth, height: window.innerHeight});
-        rocketRef.current = {x: window.innerWidth - 100, y: 50, vx: 0, vy: 0};
+        rocketRef.current = {x: window.innerWidth - 100, y: 50, vx: 0, vy: 0, angle: 0};
       }
     };
 
@@ -55,6 +60,10 @@ const RocketGame: FC = memo(() => {
 
     const handleKeyDown = (e: KeyboardEvent) => {
       const key = e.key.toUpperCase();
+      if (key === 'ESCAPE') {
+        setIsGameActive(false);
+        return;
+      }
       if (['W', 'A', 'D', 'S'].includes(key)) {
         keysPressed.current[key] = true;
         e.preventDefault();
@@ -97,6 +106,11 @@ const RocketGame: FC = memo(() => {
         rocketRef.current.vx = Math.min(rocketRef.current.vx + ROCKET_SPEED, MAX_SPEED);
       }
 
+      // Calculate rotation angle based on velocity (pointing in direction of movement)
+      if (Math.abs(rocketRef.current.vx) > 0.1 || Math.abs(rocketRef.current.vy) > 0.1) {
+        rocketRef.current.angle = Math.atan2(rocketRef.current.vy, rocketRef.current.vx) * (180 / Math.PI);
+      }
+
       // Apply friction
       rocketRef.current.vx *= FRICTION;
       rocketRef.current.vy *= FRICTION;
@@ -110,6 +124,9 @@ const RocketGame: FC = memo(() => {
       const maxY = canvasSize.height - BOUNDARY_MARGIN;
       rocketRef.current.x = Math.max(BOUNDARY_MARGIN, Math.min(maxX, rocketRef.current.x));
       rocketRef.current.y = Math.max(BOUNDARY_MARGIN, Math.min(maxY, rocketRef.current.y));
+
+      // Update rocket display position
+      setRocketPos({x: rocketRef.current.x, y: rocketRef.current.y, angle: rocketRef.current.angle});
 
       // Create particles from rocket thrust
       if (
@@ -130,13 +147,28 @@ const RocketGame: FC = memo(() => {
         }
       }
 
-      // Update particles
+      // Update particles and check collisions with rocket
       particlesRef.current = particlesRef.current.filter(p => {
         p.x += p.vx;
         p.y += p.vy;
         p.life -= 0.02;
         p.vx *= 0.98;
         p.vy *= 0.98;
+
+        // Collision detection with rocket
+        const dx = p.x - rocketRef.current.x;
+        const dy = p.y - rocketRef.current.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+
+        if (distance < COLLISION_RADIUS && distance > 0) {
+          // Scatter particle away from rocket
+          const angle = Math.atan2(dy, dx);
+          const speed = 8;
+          p.vx = Math.cos(angle) * speed;
+          p.vy = Math.sin(angle) * speed;
+          p.life = Math.min(1, p.life + 0.3); // Extend life on collision
+        }
+
         return p.life > 0;
       });
 
@@ -154,15 +186,6 @@ const RocketGame: FC = memo(() => {
             ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
             ctx.fill();
           });
-
-          // Draw rocket indicator (since actual image overlay is in JSX)
-          ctx.fillStyle = 'rgba(160, 240, 223, 0.2)';
-          ctx.beginPath();
-          ctx.arc(rocketRef.current.x, rocketRef.current.y, 25, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.strokeStyle = 'rgba(160, 240, 223, 0.4)';
-          ctx.lineWidth = 2;
-          ctx.stroke();
         }
       }
 
@@ -205,43 +228,64 @@ const RocketGame: FC = memo(() => {
         />
       )}
 
-      {/* Rocket - Always visible */}
-      <div
-        className="fixed top-12 right-8 z-[101] cursor-pointer group"
-        onMouseEnter={() => handleRocketHover(true)}
-        onMouseLeave={() => handleRocketHover(false)}>
-        {/* Tooltip */}
-        {showTooltip && (
-          <div className="absolute bottom-full right-0 mb-2 px-3 py-2 bg-[#a0f0df] text-black text-xs rounded-lg whitespace-nowrap font-semibold shadow-lg">
-            Nothing here, Just scroll down!
-          </div>
-        )}
-
-        {/* Rocket Image */}
-        <button
-          className="relative w-12 h-12 hover:scale-110 transition-transform duration-200 focus:outline-none"
-          onClick={handleRocketClick}
-          type="button">
+      {/* Rocket - Moves with game position */}
+      {isGameActive && canvasSize.width > 0 ? (
+        <div
+          className="fixed z-[102] cursor-pointer group"
+          ref={rocketImageRef}
+          style={{
+            left: `${rocketPos.x - ROCKET_SIZE / 2}px`,
+            top: `${rocketPos.y - ROCKET_SIZE / 2}px`,
+            transform: `rotate(${rocketPos.angle}deg)`,
+            transition: 'none',
+          }}>
           <Image
-            alt="Rocket Easter Egg"
-            className={`transition-opacity duration-300 ${isGameActive ? 'opacity-70' : 'opacity-100'}`}
-            height={48}
+            alt="Rocket"
+            height={ROCKET_SIZE}
             priority
             src={rocket}
-            width={48}
+            width={ROCKET_SIZE}
           />
+        </div>
+      ) : (
+        <div
+          className="fixed top-12 right-8 z-[101] cursor-pointer group"
+          onMouseEnter={() => handleRocketHover(true)}
+          onMouseLeave={() => handleRocketHover(false)}>
+          {/* Tooltip */}
+          {showTooltip && (
+            <div className="absolute bottom-full right-0 mb-2 px-3 py-2 bg-[#a0f0df] text-black text-xs rounded-lg whitespace-nowrap font-semibold shadow-lg">
+              Nothing here, Just scroll down!
+            </div>
+          )}
 
-          {/* Active indicator */}
-          {isGameActive && <div className="absolute inset-0 border-2 border-[#a0f0df] rounded-full animate-pulse" />}
-        </button>
+          {/* Rocket Image */}
+          <button
+            className="relative w-12 h-12 hover:scale-110 transition-transform duration-200 focus:outline-none"
+            onClick={handleRocketClick}
+            type="button">
+            <Image
+              alt="Rocket Easter Egg"
+              height={48}
+              priority
+              src={rocket}
+              width={48}
+            />
+          </button>
 
-        {/* Control hint when active */}
-        {isGameActive && (
+          {/* Control hint when ready */}
           <div className="absolute top-16 right-0 text-xs text-[#a0f0df] font-semibold bg-black/50 px-2 py-1 rounded whitespace-nowrap">
-            W/A/D to move
+            Click to start
           </div>
-        )}
-      </div>
+        </div>
+      )}
+
+      {/* Control hint when active */}
+      {isGameActive && (
+        <div className="fixed top-4 right-4 z-[101] text-xs text-[#a0f0df] font-semibold bg-black/50 px-3 py-2 rounded whitespace-nowrap">
+          W/A/D to move | ESC to exit
+        </div>
+      )}
     </>
   );
 });
