@@ -40,6 +40,7 @@ const ParticleSystem: FC<ParticleSystemProps> = memo(
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const particlesRef = useRef<Particle[]>([]);
     const mouseRef = useRef({x: 0, y: 0});
+    const clickRef = useRef({x: 0, y: 0, isPressed: false});
     const animationRef = useRef<number>();
     const [isClient, setIsClient] = useState(false);
 
@@ -155,31 +156,49 @@ const ParticleSystem: FC<ParticleSystemProps> = memo(
             particle.vy = 0;
           }
         } else {
-          // Always return to base position when mouse is far away
-          const mdx = particle.x - mouse.x;
-          const mdy = particle.y - mouse.y;
-          const mouseDistance = Math.sqrt(mdx * mdx + mdy * mdy);
+          // Check if mouse is being clicked (black hole mode)
+          if (clickRef.current.isPressed) {
+            // Attract to click point (black hole)
+            const cdx = clickRef.current.x - particle.x;
+            const cdy = clickRef.current.y - particle.y;
+            const clickDistance = Math.sqrt(cdx * cdx + cdy * cdy);
 
-          if (mouseDistance < 200) {
-            // Repel from mouse
-            const angle = Math.atan2(mdy, mdx);
-            const force = (200 - mouseDistance) / 200;
-            particle.vx = Math.cos(angle) * force * 4;
-            particle.vy = Math.sin(angle) * force * 4;
-          } else {
-            // Attract back to base position
-            const dx = particle.baseX - particle.x;
-            const dy = particle.baseY - particle.y;
-            const distance = Math.sqrt(dx * dx + dy * dy);
-
-            if (distance > 1) {
-              particle.vx *= 0.92;
-              particle.vy *= 0.92;
-              particle.vx += (dx / distance) * 0.05;
-              particle.vy += (dy / distance) * 0.05;
+            if (clickDistance > 1) {
+              // Very strong attraction towards click point
+              const speed = Math.min(clickDistance * 0.25, 15);
+              particle.vx = (cdx / clickDistance) * speed;
+              particle.vy = (cdy / clickDistance) * speed;
             } else {
               particle.vx *= 0.95;
               particle.vy *= 0.95;
+            }
+          } else {
+            // Normal behavior: hover repulsion and base attraction
+            const mdx = particle.x - mouse.x;
+            const mdy = particle.y - mouse.y;
+            const mouseDistance = Math.sqrt(mdx * mdx + mdy * mdy);
+
+            if (mouseDistance < 200) {
+              // Repel from mouse
+              const angle = Math.atan2(mdy, mdx);
+              const force = (200 - mouseDistance) / 200;
+              particle.vx = Math.cos(angle) * force * 4;
+              particle.vy = Math.sin(angle) * force * 4;
+            } else {
+              // Attract back to base position
+              const dx = particle.baseX - particle.x;
+              const dy = particle.baseY - particle.y;
+              const distance = Math.sqrt(dx * dx + dy * dy);
+
+              if (distance > 1) {
+                particle.vx *= 0.92;
+                particle.vy *= 0.92;
+                particle.vx += (dx / distance) * 0.05;
+                particle.vy += (dy / distance) * 0.05;
+              } else {
+                particle.vx *= 0.95;
+                particle.vy *= 0.95;
+              }
             }
           }
 
@@ -209,6 +228,21 @@ const ParticleSystem: FC<ParticleSystemProps> = memo(
       }
     };
 
+    const handleMouseDown = (e: MouseEvent) => {
+      if (canvasRef.current) {
+        const rect = canvasRef.current.getBoundingClientRect();
+        clickRef.current = {
+          x: e.clientX - rect.left,
+          y: e.clientY - rect.top,
+          isPressed: true,
+        };
+      }
+    };
+
+    const handleMouseUp = () => {
+      clickRef.current.isPressed = false;
+    };
+
     const handleResize = () => {
       if (canvasRef.current) {
         const canvas = canvasRef.current;
@@ -232,6 +266,8 @@ const ParticleSystem: FC<ParticleSystemProps> = memo(
       animate();
 
       window.addEventListener('mousemove', handleMouseMove);
+      window.addEventListener('mousedown', handleMouseDown);
+      window.addEventListener('mouseup', handleMouseUp);
       window.addEventListener('resize', handleResize);
 
       return () => {
@@ -239,6 +275,8 @@ const ParticleSystem: FC<ParticleSystemProps> = memo(
           cancelAnimationFrame(animationRef.current);
         }
         window.removeEventListener('mousemove', handleMouseMove);
+        window.removeEventListener('mousedown', handleMouseDown);
+        window.removeEventListener('mouseup', handleMouseUp);
         window.removeEventListener('resize', handleResize);
       };
     }, [isClient, itemsToRender]);
