@@ -26,9 +26,7 @@ const Page: NextPage<PropsWithChildren<HomepageMeta>> = memo(({children, title, 
       </Head>
 
       {/* Full-width viewport - no max-width constraints */}
-      <main className="relative z-10 w-full">
-        {children}
-      </main>
+      <main className="relative z-10 w-full">{children}</main>
     </>
   );
 });

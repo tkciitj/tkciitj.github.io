@@ -36,7 +36,8 @@ import {
  */
 export const homePageMeta: HomepageMeta = {
   title: 'Tushar Kant Chaubey • Portfolio',
-  description: 'Portfolio of Tushar Kant Chaubey - Full Stack Developer, Game Developer, and Problem Solver from IIT Jodhpur.',
+  description:
+    'Portfolio of Tushar Kant Chaubey - Full Stack Developer, Game Developer, and Problem Solver from IIT Jodhpur.',
 };
 
 /**
@@ -65,7 +66,12 @@ export const heroData: Hero = {
   description: (
     <>
       <p className="prose-sm text-neutral-200 sm:prose-base lg:prose-lg">
-        A <strong className="text-neutral-100">Full Stack & Game Developer</strong> from IIT Jodhpur, passionate about crafting innovative digital experiences. I specialize in <strong className="text-neutral-100">C/C++, Python, Game Development, Web Technologies, and Machine Learning</strong>, turning complex ideas into elegant solutions.
+        A <strong className="text-neutral-100">Full Stack & Game Developer</strong> from IIT Jodhpur, passionate about
+        crafting innovative digital experiences. I specialize in{' '}
+        <strong className="text-neutral-100">
+          C/C++, Python, Game Development, Web Technologies, and Machine Learning
+        </strong>
+        , turning complex ideas into elegant solutions.
       </p>
     </>
   ),
@@ -107,15 +113,18 @@ export const aboutData: About = {
 export const interests: Interest[] = [
   {
     name: 'Game Development',
-    description: 'Creating interactive and engaging 2D/3D games using Unity, C#, and game physics. Passionate about game mechanics and user experience.',
+    description:
+      'Creating interactive and engaging 2D/3D games using Unity, C#, and game physics. Passionate about game mechanics and user experience.',
   },
   {
     name: 'Full Stack Development',
-    description: 'Building scalable web applications with modern tech stacks - React, Next.js, Node.js, and various databases.',
+    description:
+      'Building scalable web applications with modern tech stacks - React, Next.js, Node.js, and various databases.',
   },
   {
     name: 'Machine Learning',
-    description: 'Exploring ML algorithms and deep learning using TensorFlow, Keras, and scikit-learn for data-driven solutions.',
+    description:
+      'Exploring ML algorithms and deep learning using TensorFlow, Keras, and scikit-learn for data-driven solutions.',
   },
   {
     name: 'Open Source Contribution',
@@ -195,7 +204,7 @@ export const portfolioItems: PortfolioItem[] = [
     image: portfolio1,
   },
   {
-    title: 'Promoteo\'25 App',
+    title: "Promoteo'25 App",
     description:
       'Mobile application developed to facilitate the Promoteo25 tech festival. Achieved 100+ real users and successful Play Store deployment, showcasing strong app development and user engagement capabilities.',
     url: '#',
@@ -241,7 +250,8 @@ export const education: TimelineItem[] = [
     title: 'B.Tech. in Engineering Science (CSE+EE)',
     content: (
       <p>
-        CGPA: 7.93 • Active participant in technical clubs and hackathons • Relevant coursework: Data Structures & Algorithms, Database Management, Web Development, Machine Learning
+        CGPA: 7.93 • Active participant in technical clubs and hackathons • Relevant coursework: Data Structures &
+        Algorithms, Database Management, Web Development, Machine Learning
       </p>
     ),
   },
@@ -249,21 +259,13 @@ export const education: TimelineItem[] = [
     date: 'Mar 2023',
     location: 'Central Public School, Kota',
     title: 'Class XII (Senior Secondary)',
-    content: (
-      <p>
-        92.00% • Strong foundation in mathematics, physics, and computer science
-      </p>
-    ),
+    content: <p>92.00% • Strong foundation in mathematics, physics, and computer science</p>,
   },
   {
     date: 'Mar 2021',
     location: 'Central Academy, Lucknow',
     title: 'Class X (Secondary)',
-    content: (
-      <p>
-        98.00% • Demonstrated excellence across all subjects and extracurricular activities
-      </p>
-    ),
+    content: <p>98.00% • Demonstrated excellence across all subjects and extracurricular activities</p>,
   },
 ];
 
@@ -274,7 +276,8 @@ export const experience: TimelineItem[] = [
     title: 'Game Developer Intern',
     content: (
       <p>
-        Developed the Call-Break game for the HiFi 1 fantasy sports application. Implemented game mechanics, UI interactions, and optimized performance for smooth gameplay experience.
+        Developed the Call-Break game for the HiFi 1 fantasy sports application. Implemented game mechanics, UI
+        interactions, and optimized performance for smooth gameplay experience.
       </p>
     ),
   },
@@ -284,27 +287,30 @@ export const experience: TimelineItem[] = [
     title: 'Web-Dev Team Representative',
     content: (
       <p>
-        Leading backend development initiatives for backend development for spic.iit.jcell portal. Collaborating with cross-functional teams to deliver scalable web solutions and improve user experience.
+        Leading backend development initiatives for backend development for spic.iit.jcell portal. Collaborating with
+        cross-functional teams to deliver scalable web solutions and improve user experience.
       </p>
     ),
   },
   {
     date: 'Dec 2024 - Mar 2025',
     location: 'DevLup Labs, IIT Jodhpur',
-    title: 'WoC\'25 Project Member',
+    title: "WoC'25 Project Member",
     content: (
       <p>
-        Developed a BulkMail Scheduler for the Placement Cell as part of Winter of Code 2025. Enabled efficient bulk email communication handling and scheduling capabilities.
+        Developed a BulkMail Scheduler for the Placement Cell as part of Winter of Code 2025. Enabled efficient bulk
+        email communication handling and scheduling capabilities.
       </p>
     ),
   },
   {
     date: 'Nov 2024 - Jan 2025',
     location: 'IIT Jodhpur',
-    title: 'Assistant Head, Promoteo\'25',
+    title: "Assistant Head, Promoteo'25",
     content: (
       <p>
-        Contributed to the development and deployment of the Promoteo25 app for the annual tech festival. Achieved 100+ real users on Play Store Launch with strong community engagement.
+        Contributed to the development and deployment of the Promoteo25 app for the annual tech festival. Achieved 100+
+        real users on Play Store Launch with strong community engagement.
       </p>
     ),
   },
@@ -316,7 +322,7 @@ export const experience: TimelineItem[] = [
 export const contact: ContactSection = {
   headerText: 'Get In Touch',
   description:
-    'Feel free to reach out to me for collaboration, opportunities, or just a friendly chat. I\'m always interested in connecting with like-minded professionals!',
+    "Feel free to reach out to me for collaboration, opportunities, or just a friendly chat. I'm always interested in connecting with like-minded professionals!",
   items: [
     {
       type: ContactType.Email,

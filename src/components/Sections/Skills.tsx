@@ -1,7 +1,7 @@
 import {CheckCircleIcon} from '@heroicons/react/24/solid';
 import {FC, memo} from 'react';
 
-import {SectionId,skills} from '../../data/data';
+import {SectionId, skills} from '../../data/data';
 import Section from '../Layout/Section';
 
 const Skills: FC = memo(() => {

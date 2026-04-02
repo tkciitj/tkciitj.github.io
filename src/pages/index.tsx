@@ -2,6 +2,7 @@ import dynamic from 'next/dynamic';
 import {FC, memo, useEffect} from 'react';
 
 import Page from '../components/Layout/Page';
+import RocketGame from '../components/RocketGame';
 import About from '../components/Sections/About';
 import Contact from '../components/Sections/Contact';
 import Resume from '../components/Sections/Experiences';
@@ -31,6 +32,9 @@ const HomeComponent: FC<HomeProps> = () => {
       <div className="relative w-full text-white bg-black">
         {/* Header always on top */}
         <Header />
+
+        {/* Rocket Easter Egg Game */}
+        <RocketGame />
 
         {/* Main content */}
         <main className="w-full">

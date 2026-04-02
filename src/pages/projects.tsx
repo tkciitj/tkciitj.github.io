@@ -38,9 +38,7 @@ const ProjectsPage: FC = memo(() => {
             <div className="flex flex-col gap-y-10">
               {/* Navigation */}
               <div className="flex items-center gap-2 mb-4">
-                <Link
-                  className="text-[#a0f0df] hover:text-[#64d5ca] transition-colors"
-                  href="/">
+                <Link className="text-[#a0f0df] hover:text-[#64d5ca] transition-colors" href="/">
                   Home
                 </Link>
                 <span className="text-neutral-500">/</span>

@@ -47,7 +47,7 @@ const ContactForm: FC = memo(() => {
         const result = await response.json();
 
         if (response.ok) {
-          setFeedback({type: 'success', message: 'Message sent successfully! I\'ll get back to you soon.'});
+          setFeedback({type: 'success', message: "Message sent successfully! I'll get back to you soon."});
           setData(defaultData);
         } else {
           setFeedback({type: 'error', message: result.message || 'Failed to send message. Please try again.'});

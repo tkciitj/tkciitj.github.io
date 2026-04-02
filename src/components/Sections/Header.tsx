@@ -2,7 +2,7 @@ import {Dialog, Transition} from '@headlessui/react';
 import {Bars3BottomRightIcon} from '@heroicons/react/24/outline';
 import classNames from 'classnames';
 import Link from 'next/link';
-import {FC, Fragment, memo, useCallback, useEffect,useMemo, useRef, useState} from 'react';
+import {FC, Fragment, memo, useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
 import {SectionId} from '../../data/data';
 import {useNavObserver} from '../../hooks/useNavObserver';
@@ -225,10 +225,7 @@ const InteractiveContactNavItem: FC<{current: boolean}> = memo(({current}) => {
   return (
     <div className="relative" style={floatingStyle}>
       {isFloating && (
-        <div
-          className="fixed z-[9999] pointer-events-auto"
-          ref={floatingElementRef}
-          style={floatingDivStyle}>
+        <div className="fixed z-[9999] pointer-events-auto" ref={floatingElementRef} style={floatingDivStyle}>
           <Link
             className={classNames(activeClass, 'hover:shadow-xl')}
             href={`/#${SectionId.Contact}`}

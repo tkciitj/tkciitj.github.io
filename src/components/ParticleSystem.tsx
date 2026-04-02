@@ -30,13 +30,7 @@ interface ParticleSystemProps {
 }
 
 const ParticleSystem: FC<ParticleSystemProps> = memo(
-  ({
-    text,
-    fontSize = 50,
-    fontFamily = 'Arial, sans-serif',
-    colors = ['#a0f0df', '#64d5ca', '#3baaa0'],
-    textItems,
-  }) => {
+  ({text, fontSize = 50, fontFamily = 'Arial, sans-serif', colors = ['#a0f0df', '#64d5ca', '#3baaa0'], textItems}) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const particlesRef = useRef<Particle[]>([]);
     const mouseRef = useRef({x: 0, y: 0});
@@ -45,8 +39,7 @@ const ParticleSystem: FC<ParticleSystemProps> = memo(
     const [isClient, setIsClient] = useState(false);
 
     // Prepare text items to render
-    const itemsToRender: TextItem[] = textItems ||
-      (text ? [{text, fontSize, yOffset: 0}] : []);
+    const itemsToRender: TextItem[] = textItems || (text ? [{text, fontSize, yOffset: 0}] : []);
 
     const initializeParticles = (canvas: HTMLCanvasElement) => {
       const ctx = canvas.getContext('2d');
