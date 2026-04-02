@@ -71,7 +71,8 @@ const DesktopNav: FC<{navSections: SectionId[]; currentSection: SectionId | null
 
 const InteractiveContactNavItem: FC<{current: boolean}> = memo(({current}) => {
   const [isFloating, setIsFloating] = useState(false);
-  const [position, setPosition] = useState<Position>({x: 0, y: 0});
+  const [floatingPosition, setFloatingPosition] = useState<Position>({x: 0, y: 0});
+  const [hoverOffset, setHoverOffset] = useState<Position>({x: 0, y: 0});
   const [mousePos, setMousePos] = useState<Position>({x: -999, y: -999});
   const staticElementRef = useRef<HTMLButtonElement>(null);
   const floatingElementRef = useRef<HTMLDivElement>(null);
@@ -89,7 +90,7 @@ const InteractiveContactNavItem: FC<{current: boolean}> = memo(({current}) => {
     setIsFloating(true);
 
     const rect = staticElementRef.current.getBoundingClientRect();
-    setPosition({
+    setFloatingPosition({
       x: rect.left,
       y: rect.top,
     });
@@ -97,10 +98,35 @@ const InteractiveContactNavItem: FC<{current: boolean}> = memo(({current}) => {
 
   // Global mouse move listener for tracking cursor position
   useEffect(() => {
-    if (!isFloating) return;
-
     const handleGlobalMouseMove = (e: MouseEvent) => {
       setMousePos({x: e.clientX, y: e.clientY});
+
+      // If not floating, handle hover avoidance on static button
+      if (!isFloating && staticElementRef.current) {
+        const rect = staticElementRef.current.getBoundingClientRect();
+        const elementCenterX = rect.left + rect.width / 2;
+        const elementCenterY = rect.top + rect.height / 2;
+
+        const dx = elementCenterX - e.clientX;
+        const dy = elementCenterY - e.clientY;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        const hoverDistance = 80; // Small radius for hover behavior
+
+        if (distance < hoverDistance && distance > 0) {
+          // Calculate push-away offset
+          const angle = Math.atan2(dy, dx);
+          const strength = (hoverDistance - distance) / hoverDistance; // 0 to 1
+          const pushDistance = strength * 40; // Max push of 40px
+
+          setHoverOffset({
+            x: Math.cos(angle) * pushDistance,
+            y: Math.sin(angle) * pushDistance,
+          });
+        } else {
+          // Reset offset when mouse is far
+          setHoverOffset({x: 0, y: 0});
+        }
+      }
     };
 
     window.addEventListener('mousemove', handleGlobalMouseMove);
@@ -109,12 +135,12 @@ const InteractiveContactNavItem: FC<{current: boolean}> = memo(({current}) => {
     };
   }, [isFloating]);
 
-  // Avoidance and floating animation
+  // Avoidance and floating animation (only when floating)
   useEffect(() => {
     if (!isFloating || !floatingElementRef.current) return;
 
     const animate = () => {
-      setPosition(prevPos => {
+      setFloatingPosition(prevPos => {
         const elementSize = floatingElementRef.current?.getBoundingClientRect() || {width: 100, height: 40};
         const elementCenterX = prevPos.x + elementSize.width / 2;
         const elementCenterY = prevPos.y + elementSize.height / 2;
@@ -165,11 +191,16 @@ const InteractiveContactNavItem: FC<{current: boolean}> = memo(({current}) => {
 
   const floatingDivStyle = useMemo(
     () => ({
-      left: `${position.x}px`,
-      top: `${position.y}px`,
+      left: `${floatingPosition.x}px`,
+      top: `${floatingPosition.y}px`,
       transition: isFloating ? 'none' : 'left 0.3s ease, top 0.3s ease',
     }),
-    [position.x, position.y, isFloating],
+    [floatingPosition.x, floatingPosition.y, isFloating],
+  );
+
+  const hoverTransform = useMemo(
+    () => `translate(${hoverOffset.x}px, ${hoverOffset.y}px) rotate(-45deg)`,
+    [hoverOffset.x, hoverOffset.y],
   );
 
   const rotatedLinkStyle = useMemo(
@@ -184,10 +215,11 @@ const InteractiveContactNavItem: FC<{current: boolean}> = memo(({current}) => {
   const staticLinkStyle = useMemo(
     () => ({
       display: 'inline-block' as const,
-      transform: 'rotate(-45deg)',
+      transform: hoverTransform,
       transformOrigin: 'center' as const,
+      transition: 'transform 0.1s ease-out',
     }),
-    [],
+    [hoverTransform],
   );
 
   return (
