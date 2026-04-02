@@ -26,19 +26,19 @@ const RocketGame: FC = memo(() => {
   const [isGameActive, setIsGameActive] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
   const [canvasSize, setCanvasSize] = useState({width: 0, height: 0});
-  const [rocketPos, setRocketPos] = useState({x: 0, y: 0, angle: 0});
   const rocketRef = useRef<RocketPosition>({x: 0, y: 0, vx: 0, vy: 0, angle: 0});
   const keysPressed = useRef<Record<string, boolean>>({});
   const particlesRef = useRef<Particle[]>([]);
   const particleIdRef = useRef(0);
   const animationRef = useRef<number | null>(null);
 
-  const ROCKET_SPEED = 3;
+  const ROCKET_SPEED = 5;
   const FRICTION = 0.95;
-  const MAX_SPEED = 8;
+  const MAX_SPEED = 10;
   const BOUNDARY_MARGIN = 50;
   const ROCKET_SIZE = 48;
   const COLLISION_RADIUS = 30;
+  const PARTICLE_SIZE = 1.5;
 
   // Initialize sizes on mount
   useEffect(() => {
@@ -107,8 +107,9 @@ const RocketGame: FC = memo(() => {
       }
 
       // Calculate rotation angle based on velocity (pointing in direction of movement)
+      // Add 90 to rotate from right-pointing to up-pointing (W = up)
       if (Math.abs(rocketRef.current.vx) > 0.1 || Math.abs(rocketRef.current.vy) > 0.1) {
-        rocketRef.current.angle = Math.atan2(rocketRef.current.vy, rocketRef.current.vx) * (180 / Math.PI);
+        rocketRef.current.angle = Math.atan2(rocketRef.current.vy, rocketRef.current.vx) * (180 / Math.PI) + 90;
       }
 
       // Apply friction
@@ -125,8 +126,12 @@ const RocketGame: FC = memo(() => {
       rocketRef.current.x = Math.max(BOUNDARY_MARGIN, Math.min(maxX, rocketRef.current.x));
       rocketRef.current.y = Math.max(BOUNDARY_MARGIN, Math.min(maxY, rocketRef.current.y));
 
-      // Update rocket display position
-      setRocketPos({x: rocketRef.current.x, y: rocketRef.current.y, angle: rocketRef.current.angle});
+      // Update rocket display position directly on DOM (avoid state update lag)
+      if (rocketImageRef.current) {
+        rocketImageRef.current.style.left = `${rocketRef.current.x - ROCKET_SIZE / 2}px`;
+        rocketImageRef.current.style.top = `${rocketRef.current.y - ROCKET_SIZE / 2}px`;
+        rocketImageRef.current.style.transform = `rotate(${rocketRef.current.angle}deg)`;
+      }
 
       // Create particles from rocket thrust
       if (
@@ -183,7 +188,7 @@ const RocketGame: FC = memo(() => {
           particlesRef.current.forEach(p => {
             ctx.fillStyle = `rgba(160, 240, 223, ${p.life * 0.6})`;
             ctx.beginPath();
-            ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
+            ctx.arc(p.x, p.y, PARTICLE_SIZE, 0, Math.PI * 2);
             ctx.fill();
           });
         }
@@ -234,9 +239,9 @@ const RocketGame: FC = memo(() => {
           className="fixed z-[102] cursor-pointer group"
           ref={rocketImageRef}
           style={{
-            left: `${rocketPos.x - ROCKET_SIZE / 2}px`,
-            top: `${rocketPos.y - ROCKET_SIZE / 2}px`,
-            transform: `rotate(${rocketPos.angle}deg)`,
+            left: '0px',
+            top: '0px',
+            transform: 'rotate(0deg)',
             transition: 'none',
           }}>
           <Image
