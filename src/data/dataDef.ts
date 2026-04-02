@@ -82,6 +82,11 @@ export interface PortfolioItem {
   description: string;
   url: string;
   image: string | StaticImageData;
+  idea?: string;
+  techStack?: string[];
+  contributors?: string[];
+  githubUrl?: string;
+  liveUrl?: string;
 }
 
 /** Resume Section */
