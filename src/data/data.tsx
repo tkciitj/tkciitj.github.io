@@ -11,10 +11,12 @@ import {
 import GithubIcon from '../components/Icon/GithubIcon';
 import InstagramIcon from '../components/Icon/InstagramIcon';
 import LinkedInIcon from '../components/Icon/LinkedInIcon';
-import portfolio1 from '../images/portfolio/portfolio-1.jpg';
-import portfolio2 from '../images/portfolio/portfolio-2.jpg';
-import portfolio3 from '../images/portfolio/portfolio-3.jpg';
-import portfolio4 from '../images/portfolio/portfolio-4.jpg';
+import portfolio1 from '../images/portfolio/portfolio-1.png';
+import portfolio2 from '../images/portfolio/portfolio-2.png';
+import portfolio3 from '../images/portfolio/portfolio-3.png';
+import portfolio4 from '../images/portfolio/portfolio-4.png';
+import portfolio5 from '../images/portfolio/portfolio-5.png';
+import portfolio6 from '../images/portfolio/portfolio-6.png';
 import profilepic from '../images/profilepic.png';
 import {
   About,
@@ -218,12 +220,14 @@ export const portfolioItems: PortfolioItem[] = [
     description:
       'Fast-paced 2D platformer action game with challenging level design and fluid combat mechanics. Features dynamic enemy AI, collectibles, and progressive difficulty to deliver an engaging gaming experience.',
     url: '#',
+    image: portfolio5,
   },
   {
     title: 'LOR (Local Onion Router)',
     description:
       'Terminal-based replica of Tor browser showcasing onion encryption layer by layer. Educational project demonstrating decentralized routing, relay nodes, and cryptographic principles of anonymous networking.',
     url: '#',
+    image: portfolio6,
   },
 ];
 
