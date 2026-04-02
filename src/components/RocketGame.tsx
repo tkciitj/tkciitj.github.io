@@ -266,24 +266,20 @@ const RocketGame: FC = memo(() => {
             type="button">
             <Image
               alt="Rocket Easter Egg"
-              height={48}
+              height={30}
               priority
               src={rocket}
-              width={48}
+              width={30}
             />
           </button>
 
-          {/* Control hint when ready */}
-          <div className="absolute top-16 right-0 text-xs text-[#a0f0df] font-semibold bg-black/50 px-2 py-1 rounded whitespace-nowrap">
-            Click to start
-          </div>
         </div>
       )}
 
       {/* Control hint when active */}
       {isGameActive && (
         <div className="fixed top-4 right-4 z-[101] text-xs text-[#a0f0df] font-semibold bg-black/50 px-3 py-2 rounded whitespace-nowrap">
-          W/A/D to move | ESC to exit
+          WASD to move | ESC to exit
         </div>
       )}
     </>
