@@ -12,7 +12,7 @@ const Projects: FC = memo(() => {
       <div className="flex flex-col gap-y-10">
         {/* Heading */}
         <h2 className="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[#a0f0df] to-[#3baaa0]">
-          Featured Projects
+          My Projects
         </h2>
 
         {/* Projects Grid */}

@@ -308,11 +308,6 @@ export const contact: ContactSection = {
       href: 'mailto:b23es1033@iitj.ac.in',
     },
     {
-      type: ContactType.Phone,
-      text: '+91 8090156163',
-      href: 'tel:+918090156163',
-    },
-    {
       type: ContactType.Github,
       text: 'tkciitj',
       href: 'https://github.com/tkciitj',

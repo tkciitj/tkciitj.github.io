@@ -19,6 +19,7 @@
     "autoprefixer": "10.4.16",
     "classnames": "^2.3.2",
     "next": "^14.0.3",
+    "nodemailer": "^8.0.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "ts-pattern": "^5.0.4"
@@ -28,6 +29,7 @@
     "@tailwindcss/forms": "^0.5.4",
     "@tailwindcss/typography": "^0.5.9",
     "@types/node": "^20.4.5",
+    "@types/nodemailer": "^7.0.11",
     "@types/react": "^18.2.18",
     "@types/tailwindcss": "^3.1.0",
     "@types/webpack-env": "^1.18.1",
