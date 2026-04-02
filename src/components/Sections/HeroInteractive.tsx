@@ -1,5 +1,5 @@
 import dynamic from 'next/dynamic';
-import {FC, memo, useEffect, useMemo, useState} from 'react';
+import {FC, memo, useEffect, useState} from 'react';
 
 import {SectionId} from '../../data/data';
 import Section from '../Layout/Section';
@@ -14,25 +14,19 @@ interface HeroInteractiveProps {}
 const HeroInteractiveComponent: FC<HeroInteractiveProps> = () => {
   const [mounted, setMounted] = useState(false);
 
-  const textItems = useMemo(
-    () => [
-      {text: 'HI, I AM TUSHAR KANT!', fontSize: 50, yOffset: 0},
-      {text: 'SCROLL ↓', fontSize: 28, yOffset: 200},
-    ],
-    [],
-  );
-
   useEffect(() => {
     setMounted(true);
   }, []);
 
   return (
     <Section noPadding sectionId={SectionId.Hero}>
-      {mounted && (
-        <div className="fixed inset-0 z-0 pointer-events-none">
-          <ParticleSystem fontFamily="Arial, sans-serif" textItems={textItems} />
-        </div>
-      )}
+      <div className="relative w-full h-screen overflow-hidden bg-black flex flex-col items-center justify-center">
+        {mounted && (
+          <div className="absolute inset-0 z-0 flex items-center justify-center">
+            <ParticleSystem fontSize={50} text="HI, I AM TUSHAR KANT!" />
+          </div>
+        )}
+      </div>
     </Section>
   );
 };

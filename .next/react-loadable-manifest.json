@@ -2,7 +2,13 @@
   "..\\components\\Sections\\HeroInteractive.tsx -> ../ParticleSystem": {
     "id": 8539,
     "files": [
-      "static/chunks/539.5f90adea1afddd80.js"
+      "static/chunks/539.3dcc8be1c018a637.js"
+    ]
+  },
+  "..\\components\\Sections\\ScrollIndicator.tsx -> ../ParticleSystem": {
+    "id": 8539,
+    "files": [
+      "static/chunks/539.3dcc8be1c018a637.js"
     ]
   },
   "index.tsx -> ../components/Sections/Header": {
