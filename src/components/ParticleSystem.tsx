@@ -15,11 +15,18 @@ interface Particle {
   forming: boolean;
 }
 
-interface ParticleSystemProps {
+interface TextItem {
   text: string;
+  fontSize: number;
+  yOffset?: number;
+}
+
+interface ParticleSystemProps {
+  text?: string;
   fontSize?: number;
   fontFamily?: string;
   colors?: string[];
+  textItems?: TextItem[];
 }
 
 const ParticleSystem: FC<ParticleSystemProps> = memo(
@@ -28,6 +35,7 @@ const ParticleSystem: FC<ParticleSystemProps> = memo(
     fontSize = 50,
     fontFamily = 'Arial, sans-serif',
     colors = ['#a0f0df', '#64d5ca', '#3baaa0'],
+    textItems,
   }) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const particlesRef = useRef<Particle[]>([]);
@@ -35,28 +43,36 @@ const ParticleSystem: FC<ParticleSystemProps> = memo(
     const animationRef = useRef<number>();
     const [isClient, setIsClient] = useState(false);
 
+    // Prepare text items to render
+    const itemsToRender: TextItem[] = textItems ||
+      (text ? [{text, fontSize, yOffset: 0}] : []);
+
     const initializeParticles = (canvas: HTMLCanvasElement) => {
       const ctx = canvas.getContext('2d');
       if (!ctx) return;
 
       particlesRef.current = [];
 
-      canvas.width = canvas.clientWidth;
-      canvas.height = canvas.clientHeight;
+      // Use viewport dimensions (already set in useEffect)
+      const width = canvas.width;
+      const height = canvas.height;
 
       // Create temporary canvas to render text
       const tempCanvas = document.createElement('canvas');
-      tempCanvas.width = canvas.width;
-      tempCanvas.height = canvas.height;
+      tempCanvas.width = width;
+      tempCanvas.height = height;
       const tempCtx = tempCanvas.getContext('2d');
       if (!tempCtx) return;
 
-      // Render text on temp canvas
-      tempCtx.font = `bold ${fontSize}px ${fontFamily}`;
-      tempCtx.textAlign = 'center';
-      tempCtx.textBaseline = 'middle';
-      tempCtx.fillStyle = 'white';
-      tempCtx.fillText(text, tempCanvas.width / 2, tempCanvas.height / 2);
+      // Render all text items on temp canvas
+      itemsToRender.forEach(item => {
+        tempCtx.font = `bold ${item.fontSize}px ${fontFamily}`;
+        tempCtx.textAlign = 'center';
+        tempCtx.textBaseline = 'middle';
+        tempCtx.fillStyle = 'white';
+        const yPos = height / 2 + (item.yOffset || 0);
+        tempCtx.fillText(item.text, width / 2, yPos);
+      });
 
       // Get image data
       const imageData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
@@ -209,8 +225,9 @@ const ParticleSystem: FC<ParticleSystemProps> = memo(
       const canvas = canvasRef.current;
       if (!canvas || !isClient) return;
 
-      canvas.width = canvas.clientWidth;
-      canvas.height = canvas.clientHeight;
+      // Use full viewport dimensions to allow particles to scatter freely
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
 
       initializeParticles(canvas);
       animate();
@@ -225,19 +242,21 @@ const ParticleSystem: FC<ParticleSystemProps> = memo(
         window.removeEventListener('mousemove', handleMouseMove);
         window.removeEventListener('resize', handleResize);
       };
-    }, [isClient, text]);
+    }, [isClient, itemsToRender]);
 
     if (!isClient) return null;
 
     return (
       <canvas
-        className="block"
         ref={canvasRef}
         style={{
-          display: 'block',
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100vw',
+          height: '100vh',
           background: 'transparent',
-          width: '100%',
-          height: 'auto',
+          pointerEvents: 'auto',
         }}
       />
     );

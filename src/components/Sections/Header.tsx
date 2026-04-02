@@ -41,9 +41,9 @@ const DesktopNav: FC<{navSections: SectionId[]; currentSection: SectionId | null
 
     return (
       <header
-        className="fixed top-0 z-50 hidden w-full bg-black/40 backdrop-blur-md shadow-md border-b border-[#a0f0df]/10 p-4 sm:block"
+        className="fixed top-0 z-50 hidden w-full bg-black/60 backdrop-blur-md shadow-md border-b border-[#a0f0df]/10 p-4 sm:block"
         id={headerID}>
-        <nav className="mx-auto max-w-6xl flex justify-end gap-x-4">
+        <nav className="flex justify-center gap-x-4">
           {navSections.map(section => (
             <NavItem
               activeClass={activeClass}
