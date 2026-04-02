@@ -81,7 +81,7 @@ export interface PortfolioItem {
   title: string;
   description: string;
   url: string;
-  image: string | StaticImageData;
+  image?: string | StaticImageData;
   idea?: string;
   techStack?: string[];
   contributors?: string[];

@@ -213,6 +213,18 @@ export const portfolioItems: PortfolioItem[] = [
     url: '#',
     image: portfolio4,
   },
+  {
+    title: 'PixelRush2D',
+    description:
+      'Fast-paced 2D platformer action game with challenging level design and fluid combat mechanics. Features dynamic enemy AI, collectibles, and progressive difficulty to deliver an engaging gaming experience.',
+    url: '#',
+  },
+  {
+    title: 'LOR (Local Onion Router)',
+    description:
+      'Terminal-based replica of Tor browser showcasing onion encryption layer by layer. Educational project demonstrating decentralized routing, relay nodes, and cryptographic principles of anonymous networking.',
+    url: '#',
+  },
 ];
 
 /**
