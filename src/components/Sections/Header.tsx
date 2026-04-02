@@ -2,7 +2,7 @@ import {Dialog, Transition} from '@headlessui/react';
 import {Bars3BottomRightIcon} from '@heroicons/react/24/outline';
 import classNames from 'classnames';
 import Link from 'next/link';
-import {FC, Fragment, memo, useCallback, useMemo, useRef,useState} from 'react';
+import {FC, Fragment, memo, useCallback, useEffect,useMemo, useRef, useState} from 'react';
 
 import {SectionId} from '../../data/data';
 import {useNavObserver} from '../../hooks/useNavObserver';
@@ -70,63 +70,106 @@ const DesktopNav: FC<{navSections: SectionId[]; currentSection: SectionId | null
 );
 
 const InteractiveContactNavItem: FC<{current: boolean}> = memo(({current}) => {
-  const [isDragging, setIsDragging] = useState(false);
   const [isFloating, setIsFloating] = useState(false);
   const [position, setPosition] = useState<Position>({x: 0, y: 0});
-  const [dragOffset, setDragOffset] = useState<Position>({x: 0, y: 0});
-  const elementRef = useRef<HTMLAnchorElement>(null);
+  const [mousePos, setMousePos] = useState<Position>({x: -999, y: -999});
+  const staticElementRef = useRef<HTMLButtonElement>(null);
+  const floatingElementRef = useRef<HTMLDivElement>(null);
+  const animationFrameRef = useRef<number | null>(null);
 
   const baseClass =
-    'px-4 py-2 rounded-md font-semibold text-sm transition duration-300 focus:outline-none focus-visible:ring-2 cursor-grab active:cursor-grabbing inline-block';
+    'px-4 py-2 rounded-md font-semibold text-sm transition-all duration-300 focus:outline-none focus-visible:ring-2 cursor-grab active:cursor-grabbing inline-block whitespace-nowrap';
   const activeClass = classNames(baseClass, 'text-[#a0f0df] bg-[#a0f0df]/10 border border-[#a0f0df]/30');
   const inactiveClass = classNames(baseClass, 'text-neutral-300 hover:text-[#a0f0df] hover:bg-white/5');
 
-  const handleMouseDown = useCallback((e: React.MouseEvent) => {
-    if (!elementRef.current) return;
+  const handleMouseDown = useCallback(() => {
+    if (!staticElementRef.current) return;
 
     // Detach and start floating
     setIsFloating(true);
 
-    const rect = elementRef.current.getBoundingClientRect();
+    const rect = staticElementRef.current.getBoundingClientRect();
     setPosition({
       x: rect.left,
       y: rect.top,
     });
-
-    setDragOffset({
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top,
-    });
-
-    setIsDragging(true);
   }, []);
 
-  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    if (!isDragging || !isFloating) return;
+  // Global mouse move listener for tracking cursor position
+  useEffect(() => {
+    if (!isFloating) return;
 
-    setPosition({
-      x: e.clientX - dragOffset.x,
-      y: e.clientY - dragOffset.y,
-    });
-  }, [isDragging, isFloating, dragOffset]);
+    const handleGlobalMouseMove = (e: MouseEvent) => {
+      setMousePos({x: e.clientX, y: e.clientY});
+    };
 
-  const handleMouseUp = useCallback(() => {
-    setIsDragging(false);
-  }, []);
+    window.addEventListener('mousemove', handleGlobalMouseMove);
+    return () => {
+      window.removeEventListener('mousemove', handleGlobalMouseMove);
+    };
+  }, [isFloating]);
+
+  // Avoidance and floating animation
+  useEffect(() => {
+    if (!isFloating || !floatingElementRef.current) return;
+
+    const animate = () => {
+      setPosition(prevPos => {
+        const elementSize = floatingElementRef.current?.getBoundingClientRect() || {width: 100, height: 40};
+        const elementCenterX = prevPos.x + elementSize.width / 2;
+        const elementCenterY = prevPos.y + elementSize.height / 2;
+
+        const dx = elementCenterX - mousePos.x;
+        const dy = elementCenterY - mousePos.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        const minDistance = 120; // Distance at which the button starts avoiding
+
+        if (distance < minDistance && distance > 0) {
+          // Move away from mouse
+          const angle = Math.atan2(dy, dx);
+          const speed = (minDistance - distance) * 0.5; // Speed increases as mouse gets closer
+          const newX = prevPos.x + Math.cos(angle) * speed;
+          const newY = prevPos.y + Math.sin(angle) * speed;
+
+          return {x: newX, y: newY};
+        }
+
+        // Gentle floating animation when not avoiding
+        const floatX = Math.sin(Date.now() * 0.001) * 2;
+        const floatY = Math.cos(Date.now() * 0.0008) * 2;
+
+        return {
+          x: prevPos.x + floatX * 0.1,
+          y: prevPos.y + floatY * 0.1,
+        };
+      });
+
+      animationFrameRef.current = requestAnimationFrame(animate);
+    };
+
+    animationFrameRef.current = requestAnimationFrame(animate);
+
+    return () => {
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
+    };
+  }, [isFloating, mousePos]);
 
   const floatingStyle = useMemo(
     () => ({
-      pointerEvents: isDragging ? ('auto' as const) : ('none' as const),
+      pointerEvents: isFloating ? ('auto' as const) : ('none' as const),
     }),
-    [isDragging],
+    [isFloating],
   );
 
   const floatingDivStyle = useMemo(
     () => ({
       left: `${position.x}px`,
       top: `${position.y}px`,
+      transition: isFloating ? 'none' : 'left 0.3s ease, top 0.3s ease',
     }),
-    [position.x, position.y],
+    [position.x, position.y, isFloating],
   );
 
   const rotatedLinkStyle = useMemo(
@@ -148,20 +191,15 @@ const InteractiveContactNavItem: FC<{current: boolean}> = memo(({current}) => {
   );
 
   return (
-    <div
-      className="relative"
-      onMouseMove={handleMouseMove}
-      onMouseUp={handleMouseUp}
-      style={floatingStyle}>
+    <div className="relative" style={floatingStyle}>
       {isFloating && (
         <div
           className="fixed z-[9999] pointer-events-auto"
+          ref={floatingElementRef}
           style={floatingDivStyle}>
           <Link
             className={classNames(activeClass, 'hover:shadow-xl')}
             href={`/#${SectionId.Contact}`}
-            onMouseDown={handleMouseDown}
-            ref={elementRef}
             style={rotatedLinkStyle}>
             Contact Me
           </Link>
@@ -169,14 +207,14 @@ const InteractiveContactNavItem: FC<{current: boolean}> = memo(({current}) => {
       )}
 
       {!isFloating && (
-        <Link
-          className={classNames(current ? activeClass : inactiveClass, 'hover:shadow-lg')}
-          href={`/#${SectionId.Contact}`}
-          onMouseDown={handleMouseDown}
-          ref={elementRef}
-          style={staticLinkStyle}>
+        <button
+          className={classNames(current ? activeClass : inactiveClass, 'hover:shadow-lg border-0 bg-transparent p-0')}
+          onClick={handleMouseDown}
+          ref={staticElementRef}
+          style={staticLinkStyle}
+          type="button">
           Contact Me
-        </Link>
+        </button>
       )}
     </div>
   );
