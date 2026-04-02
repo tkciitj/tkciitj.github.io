@@ -20,11 +20,19 @@ const HeroInteractiveComponent: FC<HeroInteractiveProps> = () => {
 
   return (
     <Section noPadding sectionId={SectionId.Hero}>
-      <div className="relative w-full h-screen overflow-hidden bg-gradient-to-br from-[#0f0f0f] via-[#1a1a2e] to-[#0f0f0f]">
+      <div className="relative w-full h-screen overflow-hidden bg-gradient-to-br from-[#0f0f0f] via-[#1a1a2e] to-[#0f0f0f] flex flex-col items-center justify-center">
         {mounted && (
-          <div className="absolute inset-0 z-0">
-            <ParticleSystem fontSize={80} text="HI, I AM TUSHAR KANT!" />
-          </div>
+          <>
+            {/* Main particle text - centered */}
+            <div className="absolute inset-0 z-0 flex items-center justify-center">
+              <ParticleSystem fontSize={50} text="HI, I AM TUSHAR KANT!" />
+            </div>
+
+            {/* Scroll indicator at bottom - smaller particles */}
+            <div className="absolute bottom-16 left-1/2 transform -translate-x-1/2 z-10 w-96">
+              <ParticleSystem fontSize={28} text="SCROLL ↓" />
+            </div>
+          </>
         )}
       </div>
     </Section>

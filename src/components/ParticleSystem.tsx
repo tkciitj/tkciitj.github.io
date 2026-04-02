@@ -25,7 +25,7 @@ interface ParticleSystemProps {
 const ParticleSystem: FC<ParticleSystemProps> = memo(
   ({
     text,
-    fontSize = 80,
+    fontSize = 50,
     fontFamily = 'Arial, sans-serif',
     colors = ['#a0f0df', '#64d5ca', '#3baaa0'],
   }) => {
@@ -140,19 +140,32 @@ const ParticleSystem: FC<ParticleSystemProps> = memo(
             particle.vy = 0;
           }
         } else {
-          // Stable particles at rest or with slight movement
+          // Always return to base position when mouse is far away
           const mdx = particle.x - mouse.x;
           const mdy = particle.y - mouse.y;
           const mouseDistance = Math.sqrt(mdx * mdx + mdy * mdy);
 
           if (mouseDistance < 200) {
+            // Repel from mouse
             const angle = Math.atan2(mdy, mdx);
             const force = (200 - mouseDistance) / 200;
             particle.vx = Math.cos(angle) * force * 4;
             particle.vy = Math.sin(angle) * force * 4;
           } else {
-            particle.vx *= 0.94;
-            particle.vy *= 0.94;
+            // Attract back to base position
+            const dx = particle.baseX - particle.x;
+            const dy = particle.baseY - particle.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+
+            if (distance > 1) {
+              particle.vx *= 0.92;
+              particle.vy *= 0.92;
+              particle.vx += (dx / distance) * 0.05;
+              particle.vy += (dy / distance) * 0.05;
+            } else {
+              particle.vx *= 0.95;
+              particle.vy *= 0.95;
+            }
           }
 
           particle.x += particle.vx;
