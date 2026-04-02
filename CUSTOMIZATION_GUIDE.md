@@ -110,7 +110,7 @@ export const skills: SkillGroup[] = [
 **File**: `src/images/profilepic.jpg`
 
 1. Replace the current picture with yours
-2. Keep the filename as `profilepic.jpg` or update the import in `src/data/data.tsx`
+2. Keep the filename as `profilepic.png` or update the import in `src/data/data.tsx`
 3. Recommended size: At least 400x400px (square)
 4. Format: JPG or PNG
 

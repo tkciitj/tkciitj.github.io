@@ -15,7 +15,7 @@ import portfolio1 from '../images/portfolio/portfolio-1.jpg';
 import portfolio2 from '../images/portfolio/portfolio-2.jpg';
 import portfolio3 from '../images/portfolio/portfolio-3.jpg';
 import portfolio4 from '../images/portfolio/portfolio-4.jpg';
-import profilepic from '../images/profilepic.jpg';
+import profilepic from '../images/profilepic.png';
 import {
   About,
   ContactSection,

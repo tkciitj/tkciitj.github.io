@@ -48,7 +48,7 @@ Edit `src/data/data.tsx` to add your information:
 - Contact information (email, social links)
 
 3. **Add Your Images**
-- Replace `src/images/profilepic.jpg` with your profile picture
+- Replace `src/images/profilepic.png` with your profile picture
 - Add project cover images to `src/images/portfolio/`
 
 4. **Update Social Links**

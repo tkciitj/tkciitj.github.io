@@ -216,7 +216,7 @@ Verification:
 
 1. **Create repository**: Go to github.com → Create `USERNAME.github.io`
 2. **Update content**: Edit `src/data/data.tsx`
-3. **Add images**: Replace `profilepic.jpg`, add project images
+3. **Add images**: Replace `profilepic.png`, add project images
 4. **Deploy**: Follow steps in `QUICK_GITHUB_DEPLOY.md`
 5. **Share**: Post link to your portfolio! 🌟
 

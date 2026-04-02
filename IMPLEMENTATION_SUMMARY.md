@@ -54,7 +54,7 @@ Essential updates:
 6. [ ] Update `socialLinks` with your social media URLs
 
 ### Priority 2: Add Visual Content
-1. [ ] Replace `src/images/profilepic.jpg` with your profile picture
+1. [ ] Replace `src/images/profilepic.png` with your profile picture
 2. [ ] Add project images to `src/images/portfolio/`
 3. [ ] Update `portfolioItems` with your projects
 
