@@ -15,11 +15,18 @@ interface Particle {
   forming: boolean;
 }
 
-interface ParticleSystemProps {
+interface TextItem {
   text: string;
+  fontSize: number;
+  yOffset?: number;
+}
+
+interface ParticleSystemProps {
+  text?: string;
   fontSize?: number;
   fontFamily?: string;
   colors?: string[];
+  textItems?: TextItem[];
 }
 
 const ParticleSystem: FC<ParticleSystemProps> = memo(
@@ -28,12 +35,17 @@ const ParticleSystem: FC<ParticleSystemProps> = memo(
     fontSize = 50,
     fontFamily = 'Arial, sans-serif',
     colors = ['#a0f0df', '#64d5ca', '#3baaa0'],
+    textItems,
   }) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const particlesRef = useRef<Particle[]>([]);
     const mouseRef = useRef({x: 0, y: 0});
     const animationRef = useRef<number>();
     const [isClient, setIsClient] = useState(false);
+
+    // Prepare text items to render
+    const itemsToRender: TextItem[] = textItems ||
+      (text ? [{text, fontSize, yOffset: 0}] : []);
 
     const initializeParticles = (canvas: HTMLCanvasElement) => {
       const ctx = canvas.getContext('2d');
@@ -51,12 +63,15 @@ const ParticleSystem: FC<ParticleSystemProps> = memo(
       const tempCtx = tempCanvas.getContext('2d');
       if (!tempCtx) return;
 
-      // Render text on temp canvas
-      tempCtx.font = `bold ${fontSize}px ${fontFamily}`;
-      tempCtx.textAlign = 'center';
-      tempCtx.textBaseline = 'middle';
-      tempCtx.fillStyle = 'white';
-      tempCtx.fillText(text, tempCanvas.width / 2, tempCanvas.height / 2);
+      // Render all text items on temp canvas
+      itemsToRender.forEach(item => {
+        tempCtx.font = `bold ${item.fontSize}px ${fontFamily}`;
+        tempCtx.textAlign = 'center';
+        tempCtx.textBaseline = 'middle';
+        tempCtx.fillStyle = 'white';
+        const yPos = tempCanvas.height / 2 + (item.yOffset || 0);
+        tempCtx.fillText(item.text, tempCanvas.width / 2, yPos);
+      });
 
       // Get image data
       const imageData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
@@ -226,7 +241,7 @@ const ParticleSystem: FC<ParticleSystemProps> = memo(
         window.removeEventListener('mousemove', handleMouseMove);
         window.removeEventListener('resize', handleResize);
       };
-    }, [isClient, text]);
+    }, [isClient, itemsToRender]);
 
     if (!isClient) return null;
 

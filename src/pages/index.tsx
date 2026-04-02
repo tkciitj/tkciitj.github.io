@@ -8,7 +8,6 @@ import Resume from '../components/Sections/Experiences';
 import Footer from '../components/Sections/Footer';
 import HeroInteractive from '../components/Sections/HeroInteractive';
 import Portfolio from '../components/Sections/Projects';
-import ScrollIndicator from '../components/Sections/ScrollIndicator';
 import Testimonials from '../components/Sections/Skills';
 import {homePageMeta} from '../data/data';
 
@@ -32,9 +31,6 @@ const HomeComponent: FC<HomeProps> = () => {
         <main className="w-full">
           {/* Interactive particle hero */}
           <HeroInteractive />
-
-          {/* Scroll indicator */}
-          <ScrollIndicator />
 
           {/* Rest of content with smooth sections */}
           <div className="w-full bg-black">
