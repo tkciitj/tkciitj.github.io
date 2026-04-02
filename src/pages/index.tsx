@@ -23,17 +23,17 @@ const HomeComponent: FC<HomeProps> = () => {
 
   return (
     <Page description={description} title={title}>
-      <div className="relative text-white bg-[#0f0f0f]">
+      <div className="relative w-full text-white bg-black">
         {/* Header always on top */}
         <Header />
 
         {/* Main content */}
-        <main>
+        <main className="w-full">
           {/* Interactive particle hero */}
           <HeroInteractive />
 
           {/* Rest of content with smooth sections */}
-          <div className="bg-[#0f0f0f]">
+          <div className="w-full bg-black">
             <About />
             <Resume />
             <Portfolio />

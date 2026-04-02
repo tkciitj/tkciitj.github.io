@@ -231,11 +231,13 @@ const ParticleSystem: FC<ParticleSystemProps> = memo(
 
     return (
       <canvas
-        className="w-full h-full block cursor-default"
+        className="block"
         ref={canvasRef}
         style={{
           display: 'block',
-          background: 'linear-gradient(135deg, #0f0f0f 0%, #1a1a2e 100%)',
+          background: 'transparent',
+          width: '100%',
+          height: 'auto',
         }}
       />
     );

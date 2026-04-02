@@ -14,7 +14,7 @@ const Section: FC<
   return (
     <section
       className={classNames(
-        'transition-all duration-500 ease-in-out',
+        'transition-all duration-500 ease-in-out w-full',
         {
           'px-4 py-16 md:py-24 lg:px-8': !noPadding,
         },
@@ -22,8 +22,9 @@ const Section: FC<
       )}
       id={sectionId}>
       <div
-        className={classNames('mx-auto max-w-6xl transition-all duration-500', {
-          'px-6 md:px-12': !noPadding,
+        className={classNames('mx-auto transition-all duration-500', {
+          'max-w-6xl px-6 md:px-12': !noPadding,
+          'w-full': noPadding,
         })}>
         {children}
       </div>

@@ -36,15 +36,15 @@ body {
   scroll-behavior: smooth;
   -webkit-tap-highlight-color: transparent;
 
-  /* Dark minty background */
-  background-color: #051311;
+  /* Vanta black space-like background */
+  background-color: #000000;
 
-  /* Continuous Mint Grid Pattern (compact) */
+  /* Subtle space grid */
   background-image:
-    linear-gradient(to right, rgba(0, 255, 170, 0.12) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(0, 255, 170, 0.12) 1px, transparent 1px);
-  background-size: 20px 20px; /* Smaller = denser grid */
-  background-attachment: fixed; /* Grid stays static during scroll */
+    linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 20px 20px;
+  background-attachment: fixed;
   background-repeat: repeat;
   background-position: 0 0;
 
