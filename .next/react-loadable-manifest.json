@@ -6,10 +6,15 @@
     ]
   },
   "index.tsx -> ../components/Sections/Header": {
-    "id": 9303,
+    "id": 1195,
     "files": [
-      "static/chunks/251.565dc56164fd9daf.js",
-      "static/chunks/303.c014b1b56fcae9fa.js"
+      "static/chunks/195.5da4a57a0ab0dabf.js"
+    ]
+  },
+  "projects.tsx -> ../components/Sections/Header": {
+    "id": 1195,
+    "files": [
+      "static/chunks/195.5da4a57a0ab0dabf.js"
     ]
   }
 }

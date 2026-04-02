@@ -1,5 +1,5 @@
 import dynamic from 'next/dynamic';
-import {FC, memo} from 'react';
+import {FC, memo, useEffect} from 'react';
 
 import Page from '../components/Layout/Page';
 import About from '../components/Sections/About';
@@ -20,6 +20,11 @@ interface HomeProps {}
 // eslint-disable-next-line react-memo/require-memo
 const HomeComponent: FC<HomeProps> = () => {
   const {title, description} = homePageMeta;
+
+  useEffect(() => {
+    // Scroll to top on page load
+    window.scrollTo(0, 0);
+  }, []);
 
   return (
     <Page description={description} title={title}>
