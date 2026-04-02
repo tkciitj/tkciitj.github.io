@@ -11,8 +11,6 @@ import {
 import GithubIcon from '../components/Icon/GithubIcon';
 import InstagramIcon from '../components/Icon/InstagramIcon';
 import LinkedInIcon from '../components/Icon/LinkedInIcon';
-import StackOverflowIcon from '../components/Icon/StackOverflowIcon';
-import TwitterIcon from '../components/Icon/TwitterIcon';
 import portfolio1 from '../images/portfolio/portfolio-1.jpg';
 import portfolio2 from '../images/portfolio/portfolio-2.jpg';
 import portfolio3 from '../images/portfolio/portfolio-3.jpg';
@@ -306,8 +304,13 @@ export const contact: ContactSection = {
   items: [
     {
       type: ContactType.Email,
-      text: 'b23cs1043@iitj.ac.in',
-      href: 'mailto:b23cs1043@iitj.ac.in',
+      text: 'b23es1033@iitj.ac.in',
+      href: 'mailto:b23es1033@iitj.ac.in',
+    },
+    {
+      type: ContactType.Phone,
+      text: '+91 8090156163',
+      href: 'tel:+918090156163',
     },
     {
       type: ContactType.Github,
@@ -317,12 +320,12 @@ export const contact: ContactSection = {
     {
       type: ContactType.LinkedIn,
       text: 'tushar-kant-chaubey',
-      href: 'https://linkedin.com/in/tushar-kant-chaubey-8fa11b2a3',
+      href: 'https://www.linkedin.com/in/tushar-kant-chaubey-88a1102a3/',
     },
     {
       type: ContactType.Instagram,
-      text: '@tushar.kant',
-      href: 'https://instagram.com/tushar.kant',
+      text: '@tushar_kc__13',
+      href: 'https://instagram.com/tushar_kc__13',
     },
   ],
 };
@@ -332,12 +335,6 @@ export const contact: ContactSection = {
  */
 export const socialLinks: Social[] = [
   {label: 'Github', Icon: GithubIcon, href: 'https://github.com/tkciitj'},
-  {
-    label: 'Stack Overflow',
-    Icon: StackOverflowIcon,
-    href: 'https://stackoverflow.com/users/your-id',
-  },
-  {label: 'LinkedIn', Icon: LinkedInIcon, href: 'https://linkedin.com/in/tushar-kant-chaubey-8fa11b2a3'},
-  {label: 'Instagram', Icon: InstagramIcon, href: 'https://instagram.com/tushar.kant'},
-  {label: 'Twitter', Icon: TwitterIcon, href: 'https://twitter.com/devtushar'},
+  {label: 'LinkedIn', Icon: LinkedInIcon, href: 'https://www.linkedin.com/in/tushar-kant-chaubey-88a1102a3/'},
+  {label: 'Instagram', Icon: InstagramIcon, href: 'https://instagram.com/tushar_kc__13'},
 ];

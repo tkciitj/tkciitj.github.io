@@ -2,10 +2,15 @@ import {Dialog, Transition} from '@headlessui/react';
 import {Bars3BottomRightIcon} from '@heroicons/react/24/outline';
 import classNames from 'classnames';
 import Link from 'next/link';
-import {FC, Fragment, memo, useCallback, useMemo, useState} from 'react';
+import {FC, Fragment, memo, useCallback, useMemo, useRef,useState} from 'react';
 
 import {SectionId} from '../../data/data';
 import {useNavObserver} from '../../hooks/useNavObserver';
+
+interface Position {
+  x: number;
+  y: number;
+}
 
 export const headerID = 'headerNav';
 
@@ -44,20 +49,140 @@ const DesktopNav: FC<{navSections: SectionId[]; currentSection: SectionId | null
         className="fixed top-0 z-50 hidden w-full bg-black/60 backdrop-blur-md shadow-md border-b border-[#a0f0df]/10 p-4 sm:block"
         id={headerID}>
         <nav className="flex justify-center gap-x-4">
-          {navSections.map(section => (
-            <NavItem
-              activeClass={activeClass}
-              current={section === currentSection}
-              inactiveClass={inactiveClass}
-              key={section}
-              section={section}
-            />
-          ))}
+          {navSections.map(section => {
+            if (section === SectionId.Contact) {
+              return <InteractiveContactNavItem current={section === currentSection} key={section} />;
+            }
+            return (
+              <NavItem
+                activeClass={activeClass}
+                current={section === currentSection}
+                inactiveClass={inactiveClass}
+                key={section}
+                section={section}
+              />
+            );
+          })}
         </nav>
       </header>
     );
   },
 );
+
+const InteractiveContactNavItem: FC<{current: boolean}> = memo(({current}) => {
+  const [isDragging, setIsDragging] = useState(false);
+  const [isFloating, setIsFloating] = useState(false);
+  const [position, setPosition] = useState<Position>({x: 0, y: 0});
+  const [dragOffset, setDragOffset] = useState<Position>({x: 0, y: 0});
+  const elementRef = useRef<HTMLAnchorElement>(null);
+
+  const baseClass =
+    'px-4 py-2 rounded-md font-semibold text-sm transition duration-300 focus:outline-none focus-visible:ring-2 cursor-grab active:cursor-grabbing inline-block';
+  const activeClass = classNames(baseClass, 'text-[#a0f0df] bg-[#a0f0df]/10 border border-[#a0f0df]/30');
+  const inactiveClass = classNames(baseClass, 'text-neutral-300 hover:text-[#a0f0df] hover:bg-white/5');
+
+  const handleMouseDown = useCallback((e: React.MouseEvent) => {
+    if (!elementRef.current) return;
+
+    // Detach and start floating
+    setIsFloating(true);
+
+    const rect = elementRef.current.getBoundingClientRect();
+    setPosition({
+      x: rect.left,
+      y: rect.top,
+    });
+
+    setDragOffset({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+    });
+
+    setIsDragging(true);
+  }, []);
+
+  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    if (!isDragging || !isFloating) return;
+
+    setPosition({
+      x: e.clientX - dragOffset.x,
+      y: e.clientY - dragOffset.y,
+    });
+  }, [isDragging, isFloating, dragOffset]);
+
+  const handleMouseUp = useCallback(() => {
+    setIsDragging(false);
+  }, []);
+
+  const floatingStyle = useMemo(
+    () => ({
+      pointerEvents: isDragging ? ('auto' as const) : ('none' as const),
+    }),
+    [isDragging],
+  );
+
+  const floatingDivStyle = useMemo(
+    () => ({
+      left: `${position.x}px`,
+      top: `${position.y}px`,
+    }),
+    [position.x, position.y],
+  );
+
+  const rotatedLinkStyle = useMemo(
+    () => ({
+      transform: 'rotate(-45deg)',
+      transformOrigin: 'center' as const,
+      boxShadow: '0 20px 25px -5px rgba(160, 240, 223, 0.3)',
+    }),
+    [],
+  );
+
+  const staticLinkStyle = useMemo(
+    () => ({
+      display: 'inline-block' as const,
+      transform: 'rotate(-45deg)',
+      transformOrigin: 'center' as const,
+    }),
+    [],
+  );
+
+  return (
+    <div
+      className="relative"
+      onMouseMove={handleMouseMove}
+      onMouseUp={handleMouseUp}
+      style={floatingStyle}>
+      {isFloating && (
+        <div
+          className="fixed z-[9999] pointer-events-auto"
+          style={floatingDivStyle}>
+          <Link
+            className={classNames(activeClass, 'hover:shadow-xl')}
+            href={`/#${SectionId.Contact}`}
+            onMouseDown={handleMouseDown}
+            ref={elementRef}
+            style={rotatedLinkStyle}>
+            Contact Me
+          </Link>
+        </div>
+      )}
+
+      {!isFloating && (
+        <Link
+          className={classNames(current ? activeClass : inactiveClass, 'hover:shadow-lg')}
+          href={`/#${SectionId.Contact}`}
+          onMouseDown={handleMouseDown}
+          ref={elementRef}
+          style={staticLinkStyle}>
+          Contact Me
+        </Link>
+      )}
+    </div>
+  );
+});
+
+InteractiveContactNavItem.displayName = 'InteractiveContactNavItem';
 
 const MobileNav: FC<{navSections: SectionId[]; currentSection: SectionId | null}> = memo(
   ({navSections, currentSection}) => {
