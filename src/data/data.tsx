@@ -35,8 +35,8 @@ import {
  * Page meta data
  */
 export const homePageMeta: HomepageMeta = {
-  title: 'Tushar Kant • Portfolio',
-  description: 'Portfolio of Tushar Kant - Full Stack Developer, Open Source Enthusiast, and Problem Solver.',
+  title: 'Tushar Kant Chaubey • Portfolio',
+  description: 'Portfolio of Tushar Kant Chaubey - Full Stack Developer, Game Developer, and Problem Solver from IIT Jodhpur.',
 };
 
 /**
@@ -61,14 +61,11 @@ export type SectionId = (typeof SectionId)[keyof typeof SectionId];
  */
 export const heroData: Hero = {
   imageSrc: profilepic,
-  name: `Hi, I'm Tushar Kant`,
+  name: `Hi, I'm Tushar Kant Chaubey`,
   description: (
     <>
       <p className="prose-sm text-neutral-200 sm:prose-base lg:prose-lg">
-        A <strong className="text-neutral-100">Full Stack Developer</strong> passionate about crafting beautiful,
-        performant web experiences. I specialize in{' '}
-        <strong className="text-neutral-100">React, Next.js, and Node.js</strong>, turning ideas into elegant digital
-        solutions.
+        A <strong className="text-neutral-100">Full Stack & Game Developer</strong> from IIT Jodhpur, passionate about crafting innovative digital experiences. I specialize in <strong className="text-neutral-100">C/C++, Python, Game Development, Web Technologies, and Machine Learning</strong>, turning complex ideas into elegant solutions.
       </p>
     </>
   ),
@@ -93,13 +90,13 @@ export const heroData: Hero = {
 export const aboutData: About = {
   profileImageSrc: profilepic,
   description:
-    'I am a Computer Science undergrad with a passion for creating impactful digital experiences. With expertise in full-stack development and a eye for design, I transform complex problems into elegant, user-centric solutions. Always eager to learn new technologies and collaborate with talented teams.',
+    'I am a passionate Engineering Science undergrad at IIT Jodhpur specializing in Computer Science & Electronics. With a strong foundation in full-stack development, game development, and machine learning, I transform complex problems into elegant, performant solutions. Always driven to learn new technologies and collaborate with talented teams on impactful projects.',
   aboutItems: [
-    {label: 'Location', text: 'India', Icon: MapIcon},
-    {label: 'Age', text: '22', Icon: CalendarIcon},
+    {label: 'Location', text: 'Jodhpur, India', Icon: MapIcon},
+    {label: 'Age', text: '21', Icon: CalendarIcon},
     {label: 'Nationality', text: 'Indian', Icon: FlagIcon},
-    {label: 'Interests', text: 'Web Dev, Open Source, Design', Icon: SparklesIcon},
-    {label: 'Study', text: 'BTech CS - IIIT Bhubaneswar', Icon: AcademicCapIcon},
+    {label: 'Interests', text: 'Game Dev, Web Dev, ML, Open Source', Icon: SparklesIcon},
+    {label: 'Study', text: 'B.Tech ESc (CSE+EE) - IIT Jodhpur', Icon: AcademicCapIcon},
     {label: 'Employment', text: 'Open to Opportunities', Icon: BuildingOffice2Icon},
   ],
 };
@@ -109,20 +106,20 @@ export const aboutData: About = {
  */
 export const interests: Interest[] = [
   {
+    name: 'Game Development',
+    description: 'Creating interactive and engaging 2D/3D games using Unity, C#, and game physics. Passionate about game mechanics and user experience.',
+  },
+  {
     name: 'Full Stack Development',
-    description: 'Building scalable, performant web applications from frontend to backend using modern tech stacks.',
+    description: 'Building scalable web applications with modern tech stacks - React, Next.js, Node.js, and various databases.',
+  },
+  {
+    name: 'Machine Learning',
+    description: 'Exploring ML algorithms and deep learning using TensorFlow, Keras, and scikit-learn for data-driven solutions.',
   },
   {
     name: 'Open Source Contribution',
-    description: 'Contributing to meaningful projects that help developers and communities solve real-world problems.',
-  },
-  {
-    name: 'UI/UX Design',
-    description: 'Creating beautiful, intuitive user experiences with attention to detail and accessibility.',
-  },
-  {
-    name: 'Cloud & DevOps',
-    description: 'Deploying and managing applications on cloud platforms with CI/CD pipelines.',
+    description: 'Contributing to meaningful projects that help the developer community and solve real-world problems.',
   },
 ];
 
@@ -131,40 +128,57 @@ export const interests: Interest[] = [
  */
 export const skills: SkillGroup[] = [
   {
-    name: 'Frontend Development',
+    name: 'Languages & Core',
     skills: [
-      {name: 'React / Next.js', level: 9},
-      {name: 'TypeScript / JavaScript', level: 9},
-      {name: 'TailwindCSS / SCSS', level: 9},
-      {name: 'Responsive Design', level: 9},
-      {name: 'Redux / State Management', level: 8},
+      {name: 'C/C++', level: 9},
+      {name: 'Python', level: 8},
+      {name: 'C#', level: 8},
+      {name: 'JavaScript', level: 8},
     ],
   },
   {
-    name: 'Backend Development',
+    name: 'Game Development',
     skills: [
-      {name: 'Node.js / Express', level: 8},
-      {name: 'REST APIs', level: 9},
-      {name: 'Authentication & Security', level: 8},
-      {name: 'Database Design', level: 8},
+      {name: 'Unity', level: 8},
+      {name: 'SDL2', level: 7},
+      {name: 'SFML', level: 7},
+      {name: 'Game Physics', level: 8},
     ],
   },
   {
-    name: 'Databases & Tools',
+    name: 'Web Development',
     skills: [
-      {name: 'MongoDB / Firebase', level: 8},
-      {name: 'PostgreSQL', level: 7},
+      {name: 'React', level: 8},
+      {name: 'Next.js', level: 7},
+      {name: 'Flutter/Dart', level: 7},
+      {name: 'Android Studio', level: 7},
+    ],
+  },
+  {
+    name: 'Machine Learning & Data',
+    skills: [
+      {name: 'TensorFlow', level: 7},
+      {name: 'Keras', level: 7},
+      {name: 'Scikit-Learn', level: 7},
+      {name: 'pandas / NumPy', level: 7},
+    ],
+  },
+  {
+    name: 'Databases & Backend',
+    skills: [
+      {name: 'MySQL', level: 8},
+      {name: 'NoSQL', level: 7},
+      {name: 'REST APIs', level: 8},
+      {name: 'SQL', level: 8},
+    ],
+  },
+  {
+    name: 'Tools & DevOps',
+    skills: [
       {name: 'Git / GitHub', level: 9},
-      {name: 'Vercel / Netlify', level: 8},
-    ],
-  },
-  {
-    name: 'Soft Skills',
-    skills: [
-      {name: 'Problem Solving', level: 9},
-      {name: 'Communication', level: 8},
-      {name: 'Team Collaboration', level: 8},
-      {name: 'Project Management', level: 7},
+      {name: 'Bash/Shell', level: 7},
+      {name: 'IntelliJ IDEA', level: 8},
+      {name: 'Postman', level: 8},
     ],
   },
 ];
@@ -174,30 +188,30 @@ export const skills: SkillGroup[] = [
  */
 export const portfolioItems: PortfolioItem[] = [
   {
-    title: 'StudyNotion',
+    title: 'Email Scheduler',
     description:
-      'A comprehensive ed-tech platform enabling course creation and student enrollment. Features include video streaming, progress tracking, and payment integration using Stripe. Built with MERN stack + TailwindCSS.',
-    url: 'https://studynotion.vercel.app/',
+      'A sophisticated email scheduling platform that streamlines bulk communications. Handles 10,000+ emails efficiently with features for single and batch sending. Completed as part of DevLup Labs Winter of Code 2025.',
+    url: '#',
     image: portfolio1,
   },
   {
-    title: 'Project Name',
+    title: 'Promoteo\'25 App',
     description:
-      'Placeholder for your next amazing project. Replace with your actual project details, technologies used, and live demo link.',
+      'Mobile application developed to facilitate the Promoteo25 tech festival. Achieved 100+ real users and successful Play Store deployment, showcasing strong app development and user engagement capabilities.',
     url: '#',
     image: portfolio2,
   },
   {
-    title: 'Project Name',
+    title: '2D Zombie Shooter (CVZ)',
     description:
-      'Placeholder for your next amazing project. Replace with your actual project details, technologies used, and live demo link.',
+      'Interactive shooting game built from scratch using C and SDL2 library. Features engaging gameplay mechanics, enemy AI, and physics-based interactions. Demonstrates proficiency in game development fundamentals.',
     url: '#',
     image: portfolio3,
   },
   {
-    title: 'Project Name',
+    title: 'MountClimb2D',
     description:
-      'Placeholder for your next amazing project. Replace with your actual project details, technologies used, and live demo link.',
+      'A 2D physics-based racing game inspired by the classic Hill Climbing. Features realistic physics simulation, dynamic terrain interactions, and smooth gameplay mechanics for an immersive gaming experience.',
     url: '#',
     image: portfolio4,
   },
@@ -208,13 +222,32 @@ export const portfolioItems: PortfolioItem[] = [
  */
 export const education: TimelineItem[] = [
   {
-    date: '2022 - 2026',
-    location: 'IIIT Bhubaneswar',
-    title: 'Bachelor of Technology in Computer Science',
+    date: 'Aug 2023 - Present',
+    location: 'Indian Institute of Technology, Jodhpur',
+    title: 'B.Tech. in Engineering Science (CSE+EE)',
     content: (
       <p>
-        CGPA: 8.5+ • Relevant coursework: Data Structures, Algorithms, DBMS, Operating Systems, Web Development,
-        Computer Networks
+        CGPA: 7.93 • Active participant in technical clubs and hackathons • Relevant coursework: Data Structures & Algorithms, Database Management, Web Development, Machine Learning
+      </p>
+    ),
+  },
+  {
+    date: 'Mar 2023',
+    location: 'Central Public School, Kota',
+    title: 'Class XII (Senior Secondary)',
+    content: (
+      <p>
+        92.00% • Strong foundation in mathematics, physics, and computer science
+      </p>
+    ),
+  },
+  {
+    date: 'Mar 2021',
+    location: 'Central Academy, Lucknow',
+    title: 'Class X (Secondary)',
+    content: (
+      <p>
+        98.00% • Demonstrated excellence across all subjects and extracurricular activities
       </p>
     ),
   },
@@ -222,24 +255,42 @@ export const education: TimelineItem[] = [
 
 export const experience: TimelineItem[] = [
   {
-    date: 'May 2024 - July 2024',
-    location: 'Tech Startup (Remote)',
-    title: 'Full Stack Developer Intern',
+    date: 'May 2025 - July 2025',
+    location: 'HiFi1.ai (Remote)',
+    title: 'Game Developer Intern',
     content: (
       <p>
-        Collaborated with the product team to build and optimize internal dashboards using React and Node.js. Integrated
-        third-party APIs, improved performance by 40%, and maintained 95% code coverage with automated tests.
+        Developed the Call-Break game for the HiFi 1 fantasy sports application. Implemented game mechanics, UI interactions, and optimized performance for smooth gameplay experience.
       </p>
     ),
   },
   {
-    date: 'Jan 2024 - Apr 2024',
-    location: 'Your Previous Company',
-    title: 'Position Name',
+    date: 'May 2025 - Present',
+    location: 'Career Minded Cell, IIT Jodhpur',
+    title: 'Web-Dev Team Representative',
     content: (
       <p>
-        Describe your role, technologies used, and key accomplishments in this section. Replace with your actual
-        experience.
+        Leading backend development initiatives for backend development for spic.iit.jcell portal. Collaborating with cross-functional teams to deliver scalable web solutions and improve user experience.
+      </p>
+    ),
+  },
+  {
+    date: 'Dec 2024 - Mar 2025',
+    location: 'DevLup Labs, IIT Jodhpur',
+    title: 'WoC\'25 Project Member',
+    content: (
+      <p>
+        Developed a BulkMail Scheduler for the Placement Cell as part of Winter of Code 2025. Enabled efficient bulk email communication handling and scheduling capabilities.
+      </p>
+    ),
+  },
+  {
+    date: 'Nov 2024 - Jan 2025',
+    location: 'IIT Jodhpur',
+    title: 'Assistant Head, Promoteo\'25',
+    content: (
+      <p>
+        Contributed to the development and deployment of the Promoteo25 app for the annual tech festival. Achieved 100+ real users on Play Store Launch with strong community engagement.
       </p>
     ),
   },
@@ -251,27 +302,27 @@ export const experience: TimelineItem[] = [
 export const contact: ContactSection = {
   headerText: 'Get In Touch',
   description:
-    "I'm always interested in hearing about new projects and opportunities. Whether you have a question or just want to say hi, feel free to reach out!",
+    'Feel free to reach out to me for collaboration, opportunities, or just a friendly chat. I\'m always interested in connecting with like-minded professionals!',
   items: [
     {
       type: ContactType.Email,
-      text: 'your.email@example.com',
-      href: 'mailto:your.email@example.com',
+      text: 'b23cs1043@iitj.ac.in',
+      href: 'mailto:b23cs1043@iitj.ac.in',
     },
     {
       type: ContactType.Github,
-      text: 'your-github-username',
-      href: 'https://github.com/your-username',
+      text: 'tkciitj',
+      href: 'https://github.com/tkciitj',
     },
     {
       type: ContactType.LinkedIn,
-      text: 'your-linkedin-profile',
-      href: 'https://www.linkedin.com/in/your-profile',
+      text: 'tushar-kant-chaubey',
+      href: 'https://linkedin.com/in/tushar-kant-chaubey-8fa11b2a3',
     },
     {
       type: ContactType.Instagram,
-      text: '@your-instagram-handle',
-      href: 'https://instagram.com/your-handle',
+      text: '@tushar.kant',
+      href: 'https://instagram.com/tushar.kant',
     },
   ],
 };
@@ -280,13 +331,13 @@ export const contact: ContactSection = {
  * Social links
  */
 export const socialLinks: Social[] = [
-  {label: 'Github', Icon: GithubIcon, href: 'https://github.com/tusharkant-code'},
+  {label: 'Github', Icon: GithubIcon, href: 'https://github.com/tkciitj'},
   {
     label: 'Stack Overflow',
     Icon: StackOverflowIcon,
     href: 'https://stackoverflow.com/users/your-id',
   },
-  {label: 'LinkedIn', Icon: LinkedInIcon, href: 'https://linkedin.com/in/tusharkant'},
-  {label: 'Instagram', Icon: InstagramIcon, href: 'https://instagram.com/dev.tushar'},
+  {label: 'LinkedIn', Icon: LinkedInIcon, href: 'https://linkedin.com/in/tushar-kant-chaubey-8fa11b2a3'},
+  {label: 'Instagram', Icon: InstagramIcon, href: 'https://instagram.com/tushar.kant'},
   {label: 'Twitter', Icon: TwitterIcon, href: 'https://twitter.com/devtushar'},
 ];
