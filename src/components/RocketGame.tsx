@@ -45,7 +45,7 @@ const RocketGame: FC = memo(() => {
     const updateSizes = () => {
       if (typeof window !== 'undefined') {
         setCanvasSize({width: window.innerWidth, height: window.innerHeight});
-        rocketRef.current = {x: window.innerWidth - 100, y: 50, vx: 0, vy: 0, angle: 0};
+        rocketRef.current = {x: window.innerWidth - 100, y: 20, vx: 0, vy: 0, angle: 0};
       }
     };
 
@@ -90,6 +90,49 @@ const RocketGame: FC = memo(() => {
   // Game loop
   useEffect(() => {
     if (!isGameActive || canvasSize.width === 0) return;
+
+    // Helper function to detect collision with text elements and create particles
+    const checkTextCollisions = () => {
+      // Find text elements on the page
+      const textElements = document.querySelectorAll('h1, h2, h3, p, span, div');
+      const rocketX = rocketRef.current.x;
+      const rocketY = rocketRef.current.y;
+      const checkRadius = 100;
+
+      textElements.forEach(el => {
+        const text = el.textContent?.toLowerCase() || '';
+        // Check if this element contains hero text or scroll text
+        if (
+          (text.includes('hi') && text.includes('tushar')) ||
+          (text.includes('scroll') && text.length < 20)
+        ) {
+          const rect = el.getBoundingClientRect();
+          const elementCenterX = rect.left + rect.width / 2 + window.scrollX;
+          const elementCenterY = rect.top + rect.height / 2 + window.scrollY;
+
+          const dx = rocketX - elementCenterX;
+          const dy = rocketY - elementCenterY;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+
+          // If rocket is close to text element, create scatter particles
+          if (distance < checkRadius + rect.width + rect.height) {
+            // Create scattered particles around rocket
+            for (let i = 0; i < 8; i++) {
+              const angle = (i / 8) * Math.PI * 2;
+              const speed = 6 + Math.random() * 3;
+              particlesRef.current.push({
+                id: particleIdRef.current++,
+                x: rocketX,
+                y: rocketY,
+                vx: Math.cos(angle) * speed,
+                vy: Math.sin(angle) * speed,
+                life: 1,
+              });
+            }
+          }
+        }
+      });
+    };
 
     const gameLoop = () => {
       // Update velocity based on keys pressed
@@ -176,6 +219,9 @@ const RocketGame: FC = memo(() => {
 
         return p.life > 0;
       });
+
+      // Check collision with text elements
+      checkTextCollisions();
 
       // Render
       const canvas = canvasRef.current;
