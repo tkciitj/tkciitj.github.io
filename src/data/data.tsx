@@ -155,7 +155,7 @@ export const skills: SkillGroup[] = [
     ],
   },
   {
-    name: 'Web Development',
+    name: 'Web & App Development',
     skills: [
       {name: 'React', level: 8},
       {name: 'SpringBoot', level: 8},
