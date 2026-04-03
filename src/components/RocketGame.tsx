@@ -259,7 +259,7 @@ const RocketGame: FC = memo(() => {
           onMouseLeave={() => handleRocketHover(false)}>
           {/* Tooltip */}
           {showTooltip && (
-            <div className="fixed top-20 right-7 mb-2 px-3 py-2 bg-[#a0f0df] text-black text-xs rounded-lg whitespace-nowrap font-semibold shadow-lg">
+            <div className="fixed top-20 right-5 mb-2 px-3 py-2 bg-[#a0f0df] text-black text-xs rounded-lg whitespace-nowrap font-semibold shadow-lg">
                 Nothing here, Just scroll down!
             </div>
           )}

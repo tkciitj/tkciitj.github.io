@@ -140,17 +140,17 @@ export const skills: SkillGroup[] = [
     name: 'Languages & Core',
     skills: [
       {name: 'C/C++', level: 9},
-      {name: 'Python', level: 8},
+      {name: 'Python', level: 7},
       {name: 'C#', level: 8},
-      {name: 'JavaScript', level: 8},
+      {name: 'Java SpringBoot', level: 8},
     ],
   },
   {
     name: 'Game Development',
     skills: [
-      {name: 'Unity', level: 8},
-      {name: 'SDL2', level: 7},
-      {name: 'SFML', level: 7},
+      {name: 'Unity', level: 9},
+      {name: 'SDL2', level: 8},
+      {name: 'SFML', level: 8},
       {name: 'Game Physics', level: 8},
     ],
   },
@@ -158,7 +158,7 @@ export const skills: SkillGroup[] = [
     name: 'Web Development',
     skills: [
       {name: 'React', level: 8},
-      {name: 'Next.js', level: 7},
+      {name: 'SpringBoot', level: 8},
       {name: 'Flutter/Dart', level: 7},
       {name: 'Android Studio', level: 7},
     ],
@@ -176,9 +176,7 @@ export const skills: SkillGroup[] = [
     name: 'Databases & Backend',
     skills: [
       {name: 'MySQL', level: 8},
-      {name: 'NoSQL', level: 7},
       {name: 'REST APIs', level: 8},
-      {name: 'SQL', level: 8},
     ],
   },
   {
