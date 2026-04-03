@@ -254,7 +254,7 @@ const RocketGame: FC = memo(() => {
         </div>
       ) : (
         <div
-          className="fixed top-6 right-8 z-[101] cursor-pointer group"
+          className="fixed top-4 right-8 z-[101] cursor-pointer group"
           onMouseEnter={() => handleRocketHover(true)}
           onMouseLeave={() => handleRocketHover(false)}>
           {/* Tooltip */}
