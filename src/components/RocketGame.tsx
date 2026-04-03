@@ -254,12 +254,12 @@ const RocketGame: FC = memo(() => {
         </div>
       ) : (
         <div
-          className="fixed top-4 right-8 z-[101] cursor-pointer group"
+          className="fixed top-4 right-6 z-[101] cursor-pointer group"
           onMouseEnter={() => handleRocketHover(true)}
           onMouseLeave={() => handleRocketHover(false)}>
           {/* Tooltip */}
           {showTooltip && (
-            <div className="fixed top-20 right-10 mb-2 px-3 py-2 bg-[#a0f0df] text-black text-xs rounded-lg whitespace-nowrap font-semibold shadow-lg">
+            <div className="fixed top-20 right-7 mb-2 px-3 py-2 bg-[#a0f0df] text-black text-xs rounded-lg whitespace-nowrap font-semibold shadow-lg">
                 Nothing here, Just scroll down!
             </div>
           )}
@@ -271,10 +271,10 @@ const RocketGame: FC = memo(() => {
             type="button">
             <Image
               alt="Rocket Easter Egg"
-              height={30}
+              height={40}
               priority
               src={rocket}
-              width={30}
+              width={40}
             />
           </button>
 
